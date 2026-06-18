@@ -1,0 +1,170 @@
+@import "tailwindcss";
+
+@theme {
+  /* Type — Space Grotesk (display) + DM Sans (body) */
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+
+  /* Warm stone neutrals */
+  --color-bg: #faf9f7;
+  --color-surface: #ffffff;
+  --color-surface-2: #f5f5f4;
+  --color-border: #e7e5e4;
+  --color-border-strong: #d6d3d1;
+  --color-ink: #1c1917;
+  --color-secondary: #57534e;
+  --color-muted: #a8a29e;
+
+  /* Iris primary */
+  --color-primary: #5b47e0;
+  --color-primary-hover: #4a37c4;
+  --color-primary-active: #3f2fb0;
+  --color-primary-soft: #eeebfc;
+  --color-on-primary: #ffffff;
+
+  /* Semantic */
+  --color-hot: #ea580c;
+  --color-hot-soft: #fdece1;
+  --color-hot-text: #9c3a0c;
+  --color-won: #059669;
+  --color-won-soft: #e1f4ec;
+  --color-won-text: #055f44;
+  --color-lost: #c0584e;
+  --color-lost-soft: #f7eae8;
+  --color-lost-text: #85332b;
+  --color-danger: #dc2626;
+  --color-danger-soft: #fbeaea;
+
+  /* Pipeline stage accents */
+  --color-stage-new: #78716c;
+  --color-stage-contacted: #2e6fe0;
+  --color-stage-replied: #5b47e0;
+  --color-stage-interested: #d97706;
+  --color-stage-won: #059669;
+  --color-stage-lost: #c0584e;
+
+  /* Radius scale */
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+
+  /* Shadows — warm-tinted, subtle */
+  --shadow-xs: 0 1px 2px rgba(28, 25, 23, 0.05);
+  --shadow-sm: 0 1px 2px rgba(28, 25, 23, 0.05), 0 2px 6px rgba(28, 25, 23, 0.05);
+  --shadow-md: 0 4px 14px rgba(28, 25, 23, 0.09);
+  --shadow-lg: 0 14px 34px rgba(28, 25, 23, 0.14);
+  --shadow-primary: 0 4px 12px rgba(91, 71, 224, 0.28);
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.018em;
+    color: var(--color-ink);
+  }
+  ::selection {
+    background: var(--color-primary-soft);
+    color: var(--color-primary-active);
+  }
+  *:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  * {
+    scrollbar-color: var(--color-border-strong) transparent;
+    scrollbar-width: thin;
+  }
+}
+
+@layer components {
+  /* Reusable building blocks so every page inherits the system */
+  .card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 0.55rem 0.95rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+  }
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .btn-primary {
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    box-shadow: var(--shadow-primary);
+  }
+  .btn-primary:not(:disabled):hover {
+    background: var(--color-primary-hover);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+  .btn-ghost {
+    background: var(--color-surface);
+    color: var(--color-ink);
+    border: 1px solid var(--color-border);
+  }
+  .btn-ghost:not(:disabled):hover {
+    background: var(--color-surface-2);
+    border-color: var(--color-border-strong);
+  }
+  .input {
+    width: 100%;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 0.55rem 0.75rem;
+    font-size: 14px;
+    color: var(--color-ink);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .input::placeholder {
+    color: var(--color-muted);
+  }
+  .input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-soft);
+  }
+  .field-label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--color-secondary);
+  }
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+}
