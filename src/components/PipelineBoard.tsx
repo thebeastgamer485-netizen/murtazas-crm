@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Plus, Upload, Search, Flame, X, Trash2 } from 'lucide-react'
+import { Plus, Upload, Search, Flame, Thermometer, Snowflake, X, Trash2 } from 'lucide-react'
 import { prospects as prospectsApi } from '../lib/api'
 import type { Prospect, ProspectInsert, ProspectStage } from '../lib/types'
 import ProspectFormModal from './ProspectFormModal'
@@ -15,25 +15,34 @@ const STAGES: { key: ProspectStage; label: string; color: string }[] = [
   { key: 'lost', label: 'Lost', color: 'var(--color-stage-lost)' },
 ]
 
-// Website-quality values that mark a prospect as a hot lead.
-const HOT_QUALITY = new Set(['none', 'outdated'])
-
-function QualityBadge({ quality }: { quality: string | null }) {
-  if (!quality) return null
-  const hot = HOT_QUALITY.has(quality.toLowerCase())
-  if (hot) {
+function LeadTempBadge({ temp }: { temp: string | null }) {
+  if (!temp) return null
+  const t = temp.toLowerCase()
+  if (t === 'hot') {
     return (
-      <span className="inline-flex items-center gap-1 rounded-full bg-hot-soft px-2 py-0.5 text-[11px] font-semibold text-hot-text">
-        <Flame size={12} strokeWidth={2.5} />
-        {quality}
+      <span className="inline-flex items-center gap-1 rounded-full bg-hot-soft px-2 py-0.5 text-[10.5px] font-semibold text-hot-text">
+        <Flame size={11} strokeWidth={2.5} />
+        Hot
       </span>
     )
   }
-  return (
-    <span className="inline-flex items-center rounded-full bg-surface-2 px-2 py-0.5 text-[11px] font-medium text-secondary">
-      {quality}
-    </span>
-  )
+  if (t === 'warm') {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[10.5px] font-semibold text-amber-700">
+        <Thermometer size={11} strokeWidth={2.5} />
+        Warm
+      </span>
+    )
+  }
+  if (t === 'cold') {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full bg-sky-100 px-2 py-0.5 text-[10.5px] font-semibold text-sky-700">
+        <Snowflake size={11} strokeWidth={2.5} />
+        Cold
+      </span>
+    )
+  }
+  return null
 }
 
 interface ProspectCardProps {
@@ -53,9 +62,6 @@ function ProspectCard({
 }: ProspectCardProps) {
   const contactInitial =
     prospect.contact_name?.charAt(0).toUpperCase() ?? null
-  const isHot =
-    !!prospect.website_quality &&
-    HOT_QUALITY.has(prospect.website_quality.toLowerCase())
   return (
     <div
       draggable
@@ -74,12 +80,7 @@ function ProspectCard({
           {prospect.business_name}
         </Link>
         <div className="flex shrink-0 items-center gap-1.5">
-          {isHot && (
-            <span className="mt-0.5 inline-flex items-center gap-1 rounded-full bg-hot-soft px-2 py-0.5 text-[10.5px] font-semibold text-hot-text">
-              <Flame size={11} strokeWidth={2.5} />
-              Hot
-            </span>
-          )}
+          <LeadTempBadge temp={prospect.lead_temp} />
           <button
             type="button"
             aria-label={`Delete ${prospect.business_name}`}
@@ -98,9 +99,10 @@ function ProspectCard({
         <div className="mt-1 text-xs text-muted">{prospect.industry}</div>
       )}
       <div className="mt-3 flex items-center justify-between gap-2 border-t border-border pt-2.5">
-        {prospect.website_quality &&
-        !HOT_QUALITY.has(prospect.website_quality.toLowerCase()) ? (
-          <QualityBadge quality={prospect.website_quality} />
+        {prospect.website_quality ? (
+          <span className="inline-flex items-center rounded-full bg-surface-2 px-2 py-0.5 text-[11px] font-medium text-secondary">
+            {prospect.website_quality}
+          </span>
         ) : (
           <span />
         )}
@@ -131,7 +133,7 @@ function PipelineBoard() {
   const [query, setQuery] = useState('')
   const [industryFilter, setIndustryFilter] = useState('')
   const [qualityFilter, setQualityFilter] = useState('')
-  const [hotOnly, setHotOnly] = useState(false)
+  const [tempFilter, setTempFilter] = useState('')
 
   const refresh = async () => {
     try {
@@ -190,24 +192,21 @@ function PipelineBoard() {
       }
       if (industryFilter && p.industry !== industryFilter) return false
       if (qualityFilter && p.website_quality !== qualityFilter) return false
-      if (
-        hotOnly &&
-        !(p.website_quality && HOT_QUALITY.has(p.website_quality.toLowerCase()))
-      ) {
+      if (tempFilter && p.lead_temp !== tempFilter) {
         return false
       }
       return true
     })
-  }, [items, query, industryFilter, qualityFilter, hotOnly])
+  }, [items, query, industryFilter, qualityFilter, tempFilter])
 
   const filtersActive =
-    !!query || !!industryFilter || !!qualityFilter || hotOnly
+    !!query || !!industryFilter || !!qualityFilter || !!tempFilter
 
   const clearFilters = () => {
     setQuery('')
     setIndustryFilter('')
     setQualityFilter('')
-    setHotOnly(false)
+    setTempFilter('')
   }
 
   const byStage = useMemo(() => {
@@ -351,22 +350,16 @@ function PipelineBoard() {
             </option>
           ))}
         </select>
-        <label
-          className={`flex cursor-pointer select-none items-center gap-2 rounded-[8px] border px-3 py-2 text-sm font-medium transition-colors ${
-            hotOnly
-              ? 'border-hot bg-hot-soft text-hot-text'
-              : 'border-border bg-surface text-secondary hover:bg-surface-2'
-          }`}
+        <select
+          value={tempFilter}
+          onChange={(e) => setTempFilter(e.target.value)}
+          className="input w-auto"
         >
-          <input
-            type="checkbox"
-            checked={hotOnly}
-            onChange={(e) => setHotOnly(e.target.checked)}
-            className="sr-only"
-          />
-          <Flame size={15} strokeWidth={2.25} />
-          Hot leads only
-        </label>
+          <option value="">All temperatures</option>
+          <option value="hot">🔥 Hot</option>
+          <option value="warm">🌡️ Warm</option>
+          <option value="cold">❄️ Cold</option>
+        </select>
         {filtersActive && (
           <button
             type="button"

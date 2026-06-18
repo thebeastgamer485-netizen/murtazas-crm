@@ -18,6 +18,8 @@ const WEBSITE_QUALITY_OPTIONS = [
   'modern',
 ]
 
+const LEAD_TEMP_OPTIONS = ['hot', 'warm', 'cold']
+
 const emptyForm: ProspectInsert = {
   business_name: '',
   contact_name: '',
@@ -26,6 +28,7 @@ const emptyForm: ProspectInsert = {
   industry: '',
   current_website: '',
   website_quality: '',
+  lead_temp: '',
   source: '',
   fit_notes: '',
   stage: 'new',
@@ -69,6 +72,7 @@ function ProspectFormModal({
       industry: form.industry || null,
       current_website: form.current_website || null,
       website_quality: form.website_quality || null,
+      lead_temp: form.lead_temp || null,
       source: form.source || null,
       fit_notes: form.fit_notes || null,
     })
@@ -194,6 +198,25 @@ function ProspectFormModal({
                 ))}
               </datalist>
             </div>
+          </div>
+
+          <div>
+            <label className={labelClass} htmlFor="lead_temp">
+              Lead temperature
+            </label>
+            <select
+              id="lead_temp"
+              className={inputClass}
+              value={form.lead_temp ?? ''}
+              onChange={(e) => set('lead_temp', e.target.value)}
+            >
+              <option value="">— None —</option>
+              {LEAD_TEMP_OPTIONS.map((t) => (
+                <option key={t} value={t}>
+                  {t.charAt(0).toUpperCase() + t.slice(1)}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

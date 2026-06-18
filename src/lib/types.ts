@@ -30,6 +30,7 @@ export interface Prospect {
   industry: string | null
   current_website: string | null
   website_quality: string | null
+  lead_temp: string | null
   source: string | null
   fit_notes: string | null
   stage: ProspectStage
@@ -40,9 +41,10 @@ export interface Prospect {
 // Fields the database fills in automatically are omitted; defaulted fields are optional.
 export type ProspectInsert = Omit<
   Prospect,
-  'id' | 'created_at' | 'updated_at' | 'stage'
+  'id' | 'created_at' | 'updated_at' | 'stage' | 'lead_temp'
 > & {
   stage?: ProspectStage
+  lead_temp?: string | null
 }
 
 export type ProspectUpdate = Partial<ProspectInsert>

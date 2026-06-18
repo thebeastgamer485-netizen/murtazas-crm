@@ -99,6 +99,7 @@ function ProspectFields({
       industry: form.industry || null,
       current_website: form.current_website || null,
       website_quality: form.website_quality || null,
+      lead_temp: form.lead_temp || null,
       source: form.source || null,
       fit_notes: form.fit_notes || null,
       stage: form.stage,
@@ -197,6 +198,19 @@ function ProspectFields({
             value={form.website_quality ?? ''}
             onChange={(e) => set('website_quality', e.target.value)}
           />
+        </div>
+        <div>
+          <label className={labelClass}>Lead temperature</label>
+          <select
+            className={inputClass}
+            value={form.lead_temp ?? ''}
+            onChange={(e) => set('lead_temp', e.target.value)}
+          >
+            <option value="">— None —</option>
+            <option value="hot">Hot</option>
+            <option value="warm">Warm</option>
+            <option value="cold">Cold</option>
+          </select>
         </div>
         <div>
           <label className={labelClass}>Source</label>
