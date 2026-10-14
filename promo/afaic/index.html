@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AFAIC Annual Report 2024–25</title>
+<style>
+@font-face { font-family: 'Fraunces'; src: url(fonts/Fraunces.woff2) format('woff2'); font-weight: 100 900; font-style: normal; }
+@font-face { font-family: 'Fraunces'; src: url(fonts/Fraunces-Italic.woff2) format('woff2'); font-weight: 100 900; font-style: italic; }
+
+:root {
+  --ivory: #F4F1E8; --ink: #14231A; --muted: #5C6A61; --line: rgba(20, 35, 26, .16);
+  --forest: #0E2619; --cream: #F4F1E8; --cmuted: rgba(244, 241, 232, .68); --cline: rgba(244, 241, 232, .2);
+  --green: #4F7C3A; --green-l: #73AA5E; --green-xl: #A9D296; --gold: #B8913A; --gold-l: #D9BC74;
+  --M: 128px; --CW: 840px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--forest); }
+body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision; font-feature-settings: 'cv11', 'ss01'; }
+#stage { position: absolute; inset: 0; overflow: hidden; }
+
+.scene { position: absolute; inset: 0; overflow: hidden; visibility: hidden; }
+.scene > .content { position: absolute; inset: 0; will-change: transform; }
+.scene > .dim { position: absolute; inset: 0; background: var(--forest); opacity: 0; pointer-events: none; }
+.ivory { background: var(--ivory); color: var(--ink); }
+.forest { background: var(--forest); color: var(--cream); }
+
+/* type */
+.serif { font-family: 'Fraunces', serif; font-optical-sizing: auto; font-weight: 360; letter-spacing: -0.022em; }
+.serif em { font-style: italic; font-weight: 340; }
+.ivory .serif em { color: var(--green); }
+.forest .serif em { color: var(--green-xl); }
+.abs { position: absolute; }
+.ln { display: block; overflow: hidden; padding-bottom: .14em; margin-bottom: -.14em; }
+.ln > .in { display: block; transform: translate3d(0, 112%, 0); will-change: transform; white-space: nowrap; }
+.num { font-variant-numeric: lining-nums tabular-nums; }
+
+.eyebrow { position: absolute; left: var(--M); top: 100px; font: 600 16px/1 'Inter'; letter-spacing: .2em; text-transform: uppercase; }
+.eyebrow .in { display: flex; align-items: center; gap: 18px; }
+.eyebrow b { font-weight: 600; }
+.eyebrow i { display: block; width: 40px; height: 1.5px; background: currentColor; opacity: .5; }
+.ivory .eyebrow { color: var(--green); }
+.forest .eyebrow { color: var(--green-xl); }
+
+.h2 { position: absolute; left: var(--M); top: 150px; width: var(--CW); font-size: 70px; line-height: 1.06; }
+.body { position: absolute; left: var(--M); width: 780px; font: 400 25px/1.5 'Inter'; }
+.ivory .body { color: var(--muted); }
+.forest .body { color: var(--cmuted); }
+.body .in { white-space: nowrap; }
+
+.rule { position: absolute; height: 1.5px; transform-origin: 0 50%; transform: scaleX(0); }
+.ivory .rule { background: var(--line); }
+.forest .rule { background: var(--cline); }
+.rule.strong { height: 2px; }
+.ivory .rule.strong { background: var(--ink); }
+.forest .rule.strong { background: var(--cream); }
+
+/* photo panel (always right, always the same size) */
+.panel { position: absolute; top: 0; left: 1056px; width: 864px; height: 1080px; overflow: hidden; background: #1b2a21; }
+.ph { position: absolute; inset: 0; overflow: hidden; }
+.ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; will-change: transform; }
+
+/* chrome */
+#chrome { position: absolute; left: var(--M); top: 978px; width: var(--CW); height: 40px; opacity: 0; z-index: 50; }
+#chrome .track { position: absolute; left: 0; top: 0; width: 100%; height: 1.5px; background: currentColor; opacity: .18; }
+#chrome .fill { position: absolute; left: 0; top: 0; height: 1.5px; background: var(--green-l); width: 0; }
+#chrome .row { position: absolute; left: 0; right: 0; top: 18px; display: flex; justify-content: space-between; align-items: center; font: 500 14px/1 'Inter'; letter-spacing: .14em; text-transform: uppercase; }
+#chrome .brand { display: flex; align-items: center; gap: 12px; }
+#chrome .brand img { width: 20px; height: 20px; }
+#chrome .cnt { font-variant-numeric: tabular-nums; }
+#edge { position: absolute; top: 0; left: 0; width: 3px; height: 1080px; background: var(--green-l); opacity: 0; z-index: 60; will-change: transform; }
+#fade { position: absolute; inset: 0; background: var(--forest); z-index: 70; opacity: 1; pointer-events: none; }
+
+/* ---- cover ---- */
+.bgphoto { position: absolute; inset: 0; overflow: hidden; }
+.bgphoto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; will-change: transform; }
+#s0 .shade { position: absolute; inset: 0; background:
+  linear-gradient(90deg, rgba(14,38,25,.95) 0%, rgba(14,38,25,.88) 36%, rgba(14,38,25,.45) 68%, rgba(14,38,25,.2) 100%),
+  linear-gradient(0deg, rgba(14,38,25,.55) 0%, rgba(14,38,25,0) 45%); }
+#s0 .logo { position: absolute; left: var(--M); top: 104px; width: 330px; }
+#s0 .kicker { position: absolute; left: var(--M); top: 512px; font: 600 18px/1 'Inter'; letter-spacing: .24em; text-transform: uppercase; color: var(--gold-l); }
+#s0 .kicker .in { display: flex; align-items: center; gap: 18px; }
+#s0 .kicker i { display: block; width: 48px; height: 1.5px; background: currentColor; }
+#s0 .h1 { position: absolute; left: var(--M); top: 556px; font-size: 132px; line-height: 1.0; letter-spacing: -0.03em; font-weight: 330; }
+#s0 .sub { position: absolute; left: var(--M); top: 872px; font: 400 26px/1 'Inter'; color: var(--cmuted); letter-spacing: .01em; }
+
+/* ---- who ---- */
+.spec { position: absolute; left: var(--M); width: var(--CW); }
+.spec .row { position: relative; height: 64px; display: flex; align-items: center; }
+.spec .row .rule { left: 0; top: 0; width: 100%; }
+.spec .k { width: 250px; font: 600 14px/1 'Inter'; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.spec .v { font: 500 23px/1 'Inter'; color: var(--ink); }
+
+/* ---- KPI blocks ---- */
+.kpi { position: absolute; }
+.kpi .rule { left: 0; top: 0; }
+.kpi .n { position: absolute; left: -4px; font-family: 'Fraunces', serif; font-optical-sizing: auto; font-weight: 300; letter-spacing: -0.035em; }
+.kpi .lab { position: absolute; left: 0; font: 400 21px/1.42 'Inter'; }
+.ivory .kpi .lab { color: var(--muted); }
+.forest .kpi .lab { color: var(--cmuted); }
+
+/* ---- programs ---- */
+.prog { position: absolute; inset: 0; }
+.prog .count { position: absolute; left: var(--M); top: 236px; font: 600 15px/1 'Inter'; letter-spacing: .18em; color: var(--muted); }
+.prog .count b { color: var(--green); font-weight: 600; }
+.prog .name { position: absolute; left: var(--M); top: 292px; font-size: 74px; line-height: 1.05; }
+.prog .desc { top: 404px; }
+.prog .note { position: absolute; left: var(--M); top: 816px; display: flex; align-items: center; gap: 14px; font: 500 19px/1 'Inter'; color: var(--green); }
+.prog .note i { display: block; width: 9px; height: 9px; transform: rotate(45deg); background: var(--green-l); }
+
+/* ---- timeline ---- */
+.tl-row { position: absolute; left: var(--M); width: var(--CW); height: 80px; }
+.tl-row .date { position: absolute; left: 0; top: 9px; font: 600 14px/1 'Inter'; letter-spacing: .16em; color: var(--gold-l); }
+.tl-row .dot { position: absolute; left: 183px; top: 7px; width: 14px; height: 14px; border-radius: 50%; background: var(--green-l); box-shadow: 0 0 0 5px rgba(115,170,94,.18); }
+.tl-row .ttl { position: absolute; left: 232px; top: -4px; font-size: 32px; line-height: 1.1; }
+.tl-row .meta { position: absolute; left: 232px; top: 42px; font: 400 19px/1.3 'Inter'; color: var(--cmuted); white-space: nowrap; }
+.tl-line { position: absolute; left: calc(var(--M) + 189.5px); width: 1.5px; background: var(--cline); transform-origin: 50% 0; transform: scaleY(0); }
+
+/* ---- chart ---- */
+.chart { position: absolute; left: 1056px; top: 196px; width: 736px; }
+.bar-row { position: relative; height: 72px; }
+.bar-row .lab { position: absolute; left: 0; top: 0; font: 500 19px/1 'Inter'; color: var(--ink); }
+.bar-row .val { position: absolute; right: 0; top: 0; font: 600 19px/1 'Inter'; color: var(--ink); }
+.bar-row .track { position: absolute; left: 0; right: 0; top: 32px; height: 10px; border-radius: 5px; background: rgba(20,35,26,.07); }
+.bar-row .bar { position: absolute; left: 0; top: 32px; height: 10px; border-radius: 5px; background: var(--green-l); width: 0; }
+.bar-row:first-child .bar { background: var(--green); }
+.source { position: absolute; left: var(--M); top: 860px; font: 500 15px/1.4 'Inter'; letter-spacing: .02em; color: var(--muted); }
+
+/* ---- partners ---- */
+.plist { position: absolute; left: var(--M); width: var(--CW); }
+.plist .cell { position: absolute; width: 400px; height: 58px; }
+.plist .cell .rule { left: 0; top: 0; width: 400px; }
+.plist .cell span { position: absolute; left: 0; top: 19px; font: 500 21px/1 'Inter'; color: var(--cream); white-space: nowrap; }
+.minilabel { position: absolute; left: var(--M); font: 600 14px/1 'Inter'; letter-spacing: .18em; text-transform: uppercase; color: var(--green-xl); }
+
+/* ---- looking ahead ---- */
+.ah-row { position: absolute; left: var(--M); width: var(--CW); height: 124px; }
+.ah-row .rule { left: 0; top: 0; width: 100%; }
+.ah-row .idx { position: absolute; left: 0; top: 30px; font: 600 15px/1 'Inter'; letter-spacing: .14em; color: var(--gold); }
+.ah-row .ttl { position: absolute; left: 76px; top: 20px; font-size: 38px; line-height: 1.1; }
+.ah-row .det { position: absolute; left: 76px; top: 72px; font: 400 19px/1.3 'Inter'; color: var(--muted); white-space: nowrap; }
+
+/* ---- closing ---- */
+#s8 .shade { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 70% at 50% 45%, rgba(14,38,25,.74) 0%, rgba(14,38,25,.9) 100%); }
+#s8 .center { position: absolute; left: 0; right: 0; text-align: center; }
+#s8 .logo { position: absolute; left: 50%; top: 236px; width: 520px; margin-left: -260px; }
+#s8 .h { top: 480px; font-size: 72px; line-height: 1.08; }
+#s8 .h .ln { display: block; }
+#s8 .contact { top: 694px; font: 500 22px/1 'Inter'; letter-spacing: .08em; color: var(--cream); }
+#s8 .contact span { opacity: .45; padding: 0 18px; }
+#s8 .ack { top: 936px; left: 200px; right: 200px; font: 400 16px/1.5 'Inter'; color: var(--cmuted); }
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- ============ 0 COVER ============ -->
+<section class="scene forest" id="s0"><div class="content">
+  <div class="bgphoto" data-a="photo" data-t="0" data-hold="5.6"><img src="assets/cover.jpg" style="object-position: 62% 40%"></div>
+  <div class="shade"></div>
+  <img class="logo" src="assets/logo_rev.svg" data-a="fade" data-t="0.35" data-d="1.4" data-y="0">
+  <div class="kicker" data-a="lines" data-t="0.9"><span class="ln"><span class="in"><i></i>Annual Report 2024–25</span></span></div>
+  <h1 class="serif h1" data-a="lines" data-t="1.05" data-st="0.14" data-d="1.25">
+    <span class="ln"><span class="in">A year of</span></span>
+    <span class="ln"><span class="in"><em>new beginnings.</em></span></span>
+  </h1>
+  <div class="sub" data-a="fade" data-t="1.9" data-d="1.2">Afghan Fajar Association Inc.&nbsp;&nbsp;·&nbsp;&nbsp;Campbelltown, NSW</div>
+</div><div class="dim"></div></section>
+
+<!-- ============ 1 WHO WE ARE ============ -->
+<section class="scene ivory" id="s1"><div class="content">
+  <div class="eyebrow" data-a="lines" data-t="0.15"><span class="ln"><span class="in"><b>01</b><i></i>Who we are</span></span></div>
+  <h2 class="serif h2" data-a="lines" data-t="0.3">
+    <span class="ln"><span class="in">Empowering Afghan and</span></span>
+    <span class="ln"><span class="in">multicultural communities</span></span>
+    <span class="ln"><span class="in">in <em>South-West Sydney.</em></span></span>
+  </h2>
+  <div class="body" style="top: 412px" data-a="lines" data-t="0.85" data-st="0.07">
+    <span class="ln"><span class="in">Through training, inclusion and wellbeing programs, we</span></span>
+    <span class="ln"><span class="in">help build a united, confident and self-reliant community.</span></span>
+  </div>
+  <div class="spec" style="top: 600px">
+    <div class="row"><div class="rule" data-a="rule" data-t="1.15"></div><span class="k" data-a="fade" data-t="1.25">Based in</span><span class="v" data-a="fade" data-t="1.3">Campbelltown, NSW</span></div>
+    <div class="row"><div class="rule" data-a="rule" data-t="1.3"></div><span class="k" data-a="fade" data-t="1.4">Serving since</span><span class="v" data-a="fade" data-t="1.45">2009</span></div>
+    <div class="row"><div class="rule" data-a="rule" data-t="1.45"></div><span class="k" data-a="fade" data-t="1.55">Status</span><span class="v" data-a="fade" data-t="1.6">Registered charity · Public Benevolent Institution</span></div>
+    <div class="row"><div class="rule" data-a="rule" data-t="1.6"></div><span class="k" data-a="fade" data-t="1.7">Settlement</span><span class="v" data-a="fade" data-t="1.75">SETS provider · Department of Home Affairs</span></div>
+    <div class="row" style="height:0"><div class="rule" data-a="rule" data-t="1.75"></div></div>
+  </div>
+  <div class="panel"><div class="ph" data-a="photo" data-t="-0.5" data-hold="6.9"><img src="assets/who.jpg" style="object-position: 45% 50%"></div></div>
+</div><div class="dim"></div></section>
+
+<!-- ============ 2 YEAR AT A GLANCE ============ -->
+<section class="scene forest" id="s2"><div class="content">
+  <div class="eyebrow" data-a="lines" data-t="0.15"><span class="ln"><span class="in"><b>02</b><i></i>The year at a glance</span></span></div>
+  <h2 class="serif h2" style="width: 1400px" data-a="lines" data-t="0.3">
+    <span class="ln"><span class="in">Our second year as a</span></span>
+    <span class="ln"><span class="in"><em>SETS provider.</em></span></span>
+  </h2>
+  <div class="body" style="top: 340px; width: 1400px" data-a="lines" data-t="0.75"><span class="ln"><span class="in">July 2024 – June 2025&nbsp;&nbsp;·&nbsp;&nbsp;Campbelltown and South-West Sydney</span></span></div>
+
+  <div class="kpi" style="left: 128px; top: 540px; width: 376px">
+    <div class="rule" style="width: 376px" data-a="rule" data-t="1.0"></div>
+    <div class="n num" style="top: 24px; font-size: 136px; line-height: 1" data-a="lines" data-t="1.1"><span class="ln"><span class="in"><span data-count="2600" data-ct="1.1" data-cd="2.0" data-suf="+">0</span></span></span></div>
+    <div class="lab" style="top: 206px; width: 330px" data-a="fade" data-t="1.35">participant contacts across our programs</div>
+  </div>
+  <div class="kpi" style="left: 544px; top: 540px; width: 376px">
+    <div class="rule" style="width: 376px" data-a="rule" data-t="1.18"></div>
+    <div class="n num" style="top: 24px; font-size: 136px; line-height: 1" data-a="lines" data-t="1.28"><span class="ln"><span class="in"><span data-count="80" data-ct="1.28" data-cd="1.8">0</span></span></span></div>
+    <div class="lab" style="top: 206px; width: 330px" data-a="fade" data-t="1.53">children learned water safety through Swim2Survive</div>
+  </div>
+  <div class="kpi" style="left: 960px; top: 540px; width: 376px">
+    <div class="rule" style="width: 376px" data-a="rule" data-t="1.36"></div>
+    <div class="n num" style="top: 24px; font-size: 136px; line-height: 1" data-a="lines" data-t="1.46"><span class="ln"><span class="in"><span data-count="52" data-ct="1.46" data-cd="1.8">0</span></span></span></div>
+    <div class="lab" style="top: 206px; width: 330px" data-a="fade" data-t="1.71">learner drivers supported with subsidised lessons</div>
+  </div>
+  <div class="kpi" style="left: 1376px; top: 540px; width: 416px">
+    <div class="rule" style="width: 416px" data-a="rule" data-t="1.54"></div>
+    <div class="n num" style="top: 24px; font-size: 136px; line-height: 1" data-a="lines" data-t="1.64"><span class="ln"><span class="in"><span data-count="18" data-ct="1.64" data-cd="1.8">0</span></span></span></div>
+    <div class="lab" style="top: 206px; width: 330px" data-a="fade" data-t="1.89">committed volunteers behind our work</div>
+  </div>
+</div><div class="dim"></div></section>
+
+<!-- ============ 3 PROGRAMS ============ -->
+<section class="scene ivory" id="s3"><div class="content">
+  <div class="eyebrow" data-a="lines" data-t="0.15"><span class="ln"><span class="in"><b>03</b><i></i>Programs</span></span></div>
+  <div class="panel">
+    <div class="ph" data-a="photo" data-t="-0.5" data-hold="3.2"><img src="assets/p1_drive.jpg" style="object-position: 40% 50%"></div>
+    <div class="ph" data-a="photo" data-reveal="up" data-t="2.0" data-hold="3.2"><img src="assets/p2_swim.jpg" style="object-position: 62% 50%"></div>
+    <div class="ph" data-a="photo" data-reveal="up" data-t="4.5" data-hold="3.2"><img src="assets/p3_wswim.jpg" style="object-position: 55% 50%"></div>
+    <div class="ph" data-a="photo" data-reveal="up" data-t="7.0" data-hold="3.2"><img src="assets/p4_sew.jpg" style="object-position: 30% 50%"></div>
+    <div class="ph" data-a="photo" data-reveal="up" data-t="9.5" data-hold="3.6"><img src="assets/p5_job.jpg" style="object-position: 55% 50%"></div>
+  </div>
+  <!-- groups are filled from PROGRAMS in the script so every program uses the identical layout -->
+  <div id="progs"></div>
+</div><div class="dim"></div></section>
+
+<!-- ============ 4 YEAR IN COMMUNITY (timeline) ============ -->
+<section class="scene forest" id="s4"><div class="content">
+  <div class="eyebrow" data-a="lines" data-t="0.15"><span class="ln"><span class="in"><b>04</b><i></i>Our year in community</span></span></div>
+  <h2 class="serif h2" data-a="lines" data-t="0.3"><span class="ln"><span class="in">Moments that <em>mattered.</em></span></span></h2>
+  <div class="tl-line" style="top: 284px; height: 560px" data-a="vrule" data-t="0.6" data-d="3.4"></div>
+  <div id="tl"></div>
+  <div class="panel">
+    <div class="ph" data-a="photo" data-t="-0.5" data-hold="3.3"><img src="assets/t1_forum.jpg" style="object-position: 50% 50%"></div>
+    <div class="ph" data-a="photo" data-reveal="fade" data-t="2.3" data-hold="3.2"><img src="assets/t2_iftar.jpg" style="object-position: 38% 50%"></div>
+    <div class="ph" data-a="photo" data-reveal="fade" data-t="4.6" data-hold="3.6"><img src="assets/t3_eid.jpg" style="object-position: 70% 50%"></div>
+  </div>
+</div><div class="dim"></div></section>
+
+<!-- ============ 5 BY THE NUMBERS ============ -->
+<section class="scene ivory" id="s5"><div class="content">
+  <div class="eyebrow" data-a="lines" data-t="0.15"><span class="ln"><span class="in"><b>05</b><i></i>By the numbers</span></span></div>
+  <h2 class="serif h2" data-a="lines" data-t="0.3">
+    <span class="ln"><span class="in">Where our <em>2,600+</em></span></span>
+    <span class="ln"><span class="in">participant contacts</span></span>
+    <span class="ln"><span class="in">came from.</span></span>
+  </h2>
+  <div class="body" style="top: 412px" data-a="lines" data-t="0.85" data-st="0.07">
+    <span class="ln"><span class="in">Participant contacts by program,</span></span>
+    <span class="ln"><span class="in">July 2024 – June 2025.</span></span>
+  </div>
+  <div class="source" data-a="fade" data-t="1.4">Source: AFAIC 2024–25 SETS Activity Work Plan report</div>
+  <div class="chart" id="chart"></div>
+</div><div class="dim"></div></section>
+
+<!-- ============ 6 PEOPLE & PARTNERSHIPS ============ -->
+<section class="scene forest" id="s6"><div class="content">
+  <div class="eyebrow" data-a="lines" data-t="0.15"><span class="ln"><span class="in"><b>06</b><i></i>People &amp; partnerships</span></span></div>
+  <h2 class="serif h2" data-a="lines" data-t="0.3"><span class="ln"><span class="in"><em>Stronger</em> together.</span></span></h2>
+  <div class="body" style="top: 262px" data-a="lines" data-t="0.6"><span class="ln"><span class="in">Our volunteers and partners make this work possible.</span></span></div>
+
+  <div class="kpi" style="left: 128px; top: 362px; width: 256px">
+    <div class="rule" style="width: 256px" data-a="rule" data-t="0.9"></div>
+    <div class="n num" style="top: 18px; font-size: 96px; line-height: 1" data-a="lines" data-t="1.0"><span class="ln"><span class="in"><span data-count="18" data-ct="1.0" data-cd="1.6">0</span></span></span></div>
+    <div class="lab" style="top: 138px; width: 240px; font-size: 19px" data-a="fade" data-t="1.2">committed volunteers</div>
+  </div>
+  <div class="kpi" style="left: 420px; top: 362px; width: 256px">
+    <div class="rule" style="width: 256px" data-a="rule" data-t="1.05"></div>
+    <div class="n num" style="top: 18px; font-size: 96px; line-height: 1" data-a="lines" data-t="1.15"><span class="ln"><span class="in"><span data-count="8" data-ct="1.15" data-cd="1.6">0</span></span></span></div>
+    <div class="lab" style="top: 138px; width: 240px; font-size: 19px" data-a="fade" data-t="1.35">volunteers trained</div>
+  </div>
+  <div class="kpi" style="left: 712px; top: 362px; width: 256px">
+    <div class="rule" style="width: 256px" data-a="rule" data-t="1.2"></div>
+    <div class="n num" style="top: 18px; font-size: 96px; line-height: 1" data-a="lines" data-t="1.3"><span class="ln"><span class="in"><span data-count="500" data-ct="1.3" data-cd="1.6" data-suf="+">0</span></span></span></div>
+    <div class="lab" style="top: 138px; width: 256px; font-size: 19px" data-a="fade" data-t="1.5">at the CALD Mental Health Forum with STARTTS</div>
+  </div>
+
+  <div class="minilabel" style="top: 636px" data-a="fade" data-t="1.55">Partners &amp; networks</div>
+  <div class="plist" id="plist" style="top: 672px"></div>
+  <div class="panel"><div class="ph" data-a="photo" data-t="-0.5" data-hold="6.9"><img src="assets/ahead.jpg" style="object-position: 50% 35%"></div></div>
+</div><div class="dim"></div></section>
+
+<!-- ============ 7 LOOKING AHEAD ============ -->
+<section class="scene ivory" id="s7"><div class="content">
+  <div class="eyebrow" data-a="lines" data-t="0.15"><span class="ln"><span class="in"><b>07</b><i></i>Looking ahead</span></span></div>
+  <h2 class="serif h2" data-a="lines" data-t="0.3"><span class="ln"><span class="in">Priorities for <em>2025–26.</em></span></span></h2>
+  <div id="ahead"></div>
+  <div class="panel"><div class="ph" data-a="photo" data-t="-0.5" data-hold="5.7"><img src="assets/partners.jpg" style="object-position: 52% 50%"></div></div>
+</div><div class="dim"></div></section>
+
+<!-- ============ 8 CLOSING ============ -->
+<section class="scene forest" id="s8"><div class="content">
+  <div class="bgphoto" data-a="photo" data-t="-0.5" data-hold="5.8"><img src="assets/closing.jpg" style="object-position: 50% 40%"></div>
+  <div class="shade"></div>
+  <img class="logo" src="assets/logo_rev.svg" data-a="fade" data-t="0.3" data-d="1.3" data-y="14">
+  <div class="center serif h" data-a="lines" data-t="0.75" data-st="0.13" data-d="1.2">
+    <span class="ln"><span class="in" style="display:inline-block">Building connections.</span></span>
+    <span class="ln"><span class="in" style="display:inline-block"><em>Empowering communities.</em></span></span>
+  </div>
+  <div class="center contact" data-a="fade" data-t="1.45">afaic.org.au<span>·</span>info@afaic.org.au<span>·</span>Campbelltown NSW</div>
+  <div class="center ack" data-a="fade" data-t="1.9">Funded by the Australian Government Department of Home Affairs through the Settlement Engagement and Transition Support (SETS) program.<br>Proud member of the NSW Afghan Settlement Partnership.</div>
+</div><div class="dim"></div></section>
+
+<div id="chrome">
+  <div class="track"></div><div class="fill"></div>
+  <div class="row"><div class="brand"><img src="assets/emblem.svg"><span>AFAIC&nbsp;&nbsp;·&nbsp;&nbsp;Annual Report 2024–25</span></div><div class="cnt"><span id="cnum">01</span>&nbsp;/&nbsp;07</div></div>
+</div>
+<div id="edge"></div>
+<div id="fade"></div>
+</div>
+
+<script>
+// ------------------------------------------------------------------ content
+const PROGRAMS = [
+  { name: 'Learn2Drive', desc: ['Subsidised driving lessons that build', 'independence and open pathways to work.'],
+    stats: [[52, 'learner drivers', 'supported'], [520, 'subsidised lessons', 'delivered']], note: 'Exceeded our annual target by 30%' },
+  { name: 'Swim2Survive', desc: ['Swimming and water-safety lessons for', 'children aged 5 to 15.'],
+    stats: [[80, 'young swimmers across', 'two blocks'], [800, 'participant contacts, incl.', 'water-safety workshops']], note: 'Every block opens with a water-safety workshop' },
+  { name: 'Women Swim2Survive', desc: ['Swimming lessons for women in a private,', 'culturally safe and supportive setting.'],
+    stats: [[20, 'women taking part', 'in the program'], [100, 'participant contacts', 'across five sessions']], note: 'Women-only sessions' },
+  { name: 'Women’s Sewing Classes', desc: ['Weekly classes building practical skills,', 'English, confidence and income.'],
+    stats: [[15, 'women attending', 'every week'], [600, 'participant contacts', 'across 40 weeks']], note: 'Includes micro-enterprise training' },
+  { name: 'Afghan Job Club', desc: ['Practical help with job searching,', 'resumes, applications and interviews.'],
+    stats: [[2, 'Job Club sessions', 'held this year'], [22, 'job seekers', 'supported']], note: 'Delivered by specially trained volunteers' },
+];
+const TIMELINE = [
+  ['OCT 2024', 'Swim2Survive classes', '80 children, plus water-safety workshops'],
+  ['NOV 2024', 'Men’s community forum', '30 participants shared their settlement needs'],
+  ['FEB 2025', 'Youth leadership camp', 'Nearly 45 young people, 21–23 February'],
+  ['MAR 2025', 'Community Iftar dinner', 'Nearly 220 guests, including elected representatives'],
+  ['APR 2025', 'Eid & Nowruz celebration', 'Nearly 250 people at Campbelltown Civic Hall'],
+  ['MAY 2025', 'Women’s community forum', '15 women shared their needs and ideas'],
+  ['JUN 2025', 'Inclusion training', 'LGBTQI+ inclusion training with STARTTS'],
+];
+const CHART = [
+  ['Women’s Sewing Classes', 600], ['Learn2Drive', 520], ['Swim2Survive', 400], ['Water-safety workshops', 400],
+  ['Eid & Nowruz celebration', 250], ['Community Iftar dinner', 220], ['Women Swim2Survive', 100],
+  ['Youth leadership camp', 45], ['Community forums', 45], ['Afghan Job Club', 22],
+];
+const PARTNERS = ['STARTTS', 'NAVITAS', 'Settlement Services International', 'Campbelltown City Council',
+  'Sydney Community Forum', 'CORE Multicultural Service', 'Western Sydney MRC', 'NSW Afghan Settlement Partnership'];
+const AHEAD = [
+  ['White Card training', 'Construction safety certification · August 2025'],
+  ['Families in Cultural Transition', 'STARTTS program · 10 sessions for 15 participants'],
+  ['ARYA Youth Achievement Awards', 'Celebrating young achievers · late 2025'],
+  ['Women’s Purple Heart workshops', 'Wellbeing and resilience, with STARTTS'],
+  ['Family violence awareness', 'Two workshops a year in community languages'],
+];
+
+// ------------------------------------------------------------------ build repeated layouts
+const ln = (html, extra = '') => `<span class="ln"><span class="in"${extra}>${html}</span></span>`;
+(function build() {
+  const pg = document.getElementById('progs');
+  PROGRAMS.forEach((p, k) => {
+    const tin = k === 0 ? 0.3 : k * 2.5 - 0.3, tout = k < PROGRAMS.length - 1 ? (k + 1) * 2.5 - 0.62 : null;
+    const o = tout == null ? '' : ` data-out="${tout}"`;
+    const stat = (s, j) => {
+      const x = 128 + j * 420, t = tin + 0.34 + j * 0.12;
+      return `<div class="kpi" style="left:${x}px; top:548px; width:380px">
+        <div class="rule" style="width:380px" data-a="rule" data-t="${t}"${o}></div>
+        <div class="n num" style="top:20px; font-size:112px; line-height:1" data-a="lines" data-t="${t + 0.06}"${o}>${ln(`<span data-count="${s[0]}" data-ct="${t + 0.06}" data-cd="1.4">0</span>`)}</div>
+        <div class="lab" style="top:158px" data-a="lines" data-t="${t + 0.18}" data-st="0.05"${o}>${ln(s[1])}${ln(s[2])}</div>
+      </div>`;
+    };
+    pg.insertAdjacentHTML('beforeend', `<div class="prog">
+      <div class="count" data-a="lines" data-t="${tin}"${o}>${ln(`<b>0${k + 1}</b>&nbsp;&nbsp;/&nbsp;&nbsp;0${PROGRAMS.length}`)}</div>
+      <div class="serif name" data-a="lines" data-t="${tin + 0.06}"${o}>${ln(p.name)}</div>
+      <div class="body desc" data-a="lines" data-t="${tin + 0.18}" data-st="0.06"${o}>${p.desc.map(d => ln(d)).join('')}</div>
+      ${p.stats.map(stat).join('')}
+      <div class="note" data-a="fade" data-t="${tin + 0.75}" data-y="10"${o}><i></i>${p.note}</div>
+    </div>`);
+  });
+
+  const tl = document.getElementById('tl');
+  TIMELINE.forEach((r, i) => {
+    const t = 0.7 + i * 0.48, top = 270 + i * 92;
+    tl.insertAdjacentHTML('beforeend', `<div class="tl-row" style="top:${top}px">
+      <div class="date" data-a="fade" data-t="${t}" data-y="8">${r[0]}</div>
+      <div class="dot" data-a="dot" data-t="${t}"></div>
+      <div class="serif ttl" data-a="lines" data-t="${t + 0.04}">${ln(r[1])}</div>
+      <div class="meta" data-a="fade" data-t="${t + 0.16}" data-y="8">${r[2]}</div>
+    </div>`);
+  });
+
+  const ch = document.getElementById('chart'), max = CHART[0][1];
+  CHART.forEach((r, i) => {
+    const t = 0.7 + i * 0.085;
+    ch.insertAdjacentHTML('beforeend', `<div class="bar-row">
+      <div class="lab" data-a="fade" data-t="${t}" data-y="8">${r[0]}</div>
+      <div class="val num" data-a="fade" data-t="${t}" data-y="8"><span data-count="${r[1]}" data-ct="${t + 0.05}" data-cd="1.3">0</span></div>
+      <div class="track"></div>
+      <div class="bar" data-a="bar" data-t="${t + 0.05}" data-d="1.3" data-w="${(r[1] / max * 100).toFixed(3)}"></div>
+    </div>`);
+  });
+
+  const pl = document.getElementById('plist');
+  PARTNERS.forEach((p, i) => {
+    const c = i % 2, r = Math.floor(i / 2), t = 1.62 + i * 0.07;
+    pl.insertAdjacentHTML('beforeend', `<div class="cell" style="left:${c * 440}px; top:${r * 58}px">
+      <div class="rule" data-a="rule" data-t="${t}" data-d="0.8"></div><span data-a="fade" data-t="${t + 0.08}" data-y="8">${p}</span></div>`);
+  });
+
+  const ah = document.getElementById('ahead');
+  AHEAD.forEach((a, i) => {
+    const t = 0.6 + i * 0.16, top = 282 + i * 124;
+    ah.insertAdjacentHTML('beforeend', `<div class="ah-row" style="top:${top}px">
+      <div class="rule" data-a="rule" data-t="${t}"></div>
+      <div class="idx" data-a="fade" data-t="${t + 0.05}" data-y="8">0${i + 1}</div>
+      <div class="serif ttl" data-a="lines" data-t="${t + 0.05}">${ln(a[0])}</div>
+      <div class="det" data-a="fade" data-t="${t + 0.16}" data-y="8">${a[1]}</div>
+    </div>`);
+    if (i === AHEAD.length - 1) ah.insertAdjacentHTML('beforeend', `<div class="ah-row" style="top:${top + 124}px; height:0"><div class="rule" data-a="rule" data-t="${t + 0.16}"></div></div>`);
+  });
+})();
+
+// ------------------------------------------------------------------ timing
+const DUR = 60;
+const B = [0, 5, 11.25, 17.5, 30, 37.5, 43.75, 50, 55, 60]; // scene boundaries (wipe midpoints)
+const TR = 0.5;                                             // half of the wipe duration
+const THEME = ['dark', 'ivory', 'forest', 'ivory', 'forest', 'ivory', 'forest', 'ivory', 'dark'];
+
+const P = (t, s, d) => Math.min(1, Math.max(0, (t - s) / d));
+const E = {
+  outQuint: p => 1 - Math.pow(1 - p, 5),
+  outQuart: p => 1 - Math.pow(1 - p, 4),
+  outCubic: p => 1 - Math.pow(1 - p, 3),
+  inOutCubic: p => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2,
+  inOutQuart: p => p < .5 ? 8 * p * p * p * p : 1 - Math.pow(-2 * p + 2, 4) / 2,
+  inOutSine: p => -(Math.cos(Math.PI * p) - 1) / 2,
+  outExpo: p => p >= 1 ? 1 : 1 - Math.pow(2, -10 * p),
+};
+const num = (v, d) => v === undefined ? d : +v;
+
+const scenes = [...document.querySelectorAll('.scene')];
+const cache = scenes.map(s => ({
+  content: s.querySelector('.content'), dim: s.querySelector('.dim'),
+  els: [...s.querySelectorAll('[data-a]')].map(el => ({ el, a: el.dataset.a, t0: num(el.dataset.t, 0), d: el.dataset.d, out: el.dataset.out === undefined ? null : +el.dataset.out, ins: [...el.querySelectorAll(':scope .in')] })),
+  counts: [...s.querySelectorAll('[data-count]')].map(el => ({ el, to: +el.dataset.count, t0: +el.dataset.ct, d: +el.dataset.cd, suf: el.dataset.suf || '' })),
+}));
+
+function updateScene(c, lt) {
+  for (const o of c.els) {
+    const { el, a, t0 } = o;
+    if (a === 'lines') {
+      const d = num(o.d, 1.0), st = num(el.dataset.st, 0.09);
+      o.ins.forEach((n, k) => {
+        let y = 112 * (1 - E.outQuint(P(lt, t0 + k * st, d)));
+        if (o.out != null) y -= 112 * E.inOutCubic(P(lt, o.out + k * 0.04, 0.55));
+        n.style.transform = `translate3d(0,${y.toFixed(3)}%,0)`;
+      });
+    } else if (a === 'fade') {
+      const d = num(o.d, 0.9), dy = num(el.dataset.y, 22), p = E.outCubic(P(lt, t0, d));
+      let op = p, y = (1 - p) * dy;
+      if (o.out != null) { const q = E.inOutCubic(P(lt, o.out, 0.5)); op *= 1 - q; y -= q * 10; }
+      el.style.opacity = op.toFixed(4); el.style.transform = `translate3d(0,${y.toFixed(3)}px,0)`;
+    } else if (a === 'rule') {
+      const p = E.inOutCubic(P(lt, t0, num(o.d, 1.0)));
+      let op = 1; if (o.out != null) op = 1 - E.inOutCubic(P(lt, o.out, 0.5));
+      el.style.transform = `scaleX(${p.toFixed(4)})`; el.style.opacity = op.toFixed(4);
+    } else if (a === 'vrule') {
+      el.style.transform = `scaleY(${E.inOutSine(P(lt, t0, num(o.d, 1.0))).toFixed(4)})`;
+    } else if (a === 'dot') {
+      const p = E.outCubic(P(lt, t0, 0.6));
+      el.style.transform = `scale(${p.toFixed(4)})`; el.style.opacity = p.toFixed(4);
+    } else if (a === 'bar') {
+      el.style.width = (+el.dataset.w * E.outQuart(P(lt, t0, num(o.d, 1.2)))).toFixed(3) + '%';
+    } else if (a === 'photo') {
+      const hold = num(el.dataset.hold, 6), rev = el.dataset.reveal;
+      if (rev === 'up') { const p = E.inOutQuart(P(lt, t0, 1.0)); el.style.clipPath = `inset(${((1 - p) * 100).toFixed(3)}% 0 0 0)`; el.style.visibility = p > 0 ? 'visible' : 'hidden'; }
+      else if (rev === 'fade') { const p = E.inOutSine(P(lt, t0, 1.1)); el.style.opacity = p.toFixed(4); el.style.visibility = p > 0 ? 'visible' : 'hidden'; }
+      const s = 1 + 0.085 * (1 - E.outCubic(P(lt, t0, 2.8))) + 0.035 * (1 - P(lt, t0, hold));
+      const ty = rev === 'up' ? 60 * (1 - E.outCubic(P(lt, t0, 1.6))) : 0;
+      el.firstElementChild.style.transform = `translate3d(0,${ty.toFixed(3)}px,0) scale(${s.toFixed(5)})`;
+    }
+  }
+  for (const o of c.counts) {
+    const v = Math.round(o.to * E.outExpo(P(lt, o.t0, o.d)));
+    const s = v.toLocaleString('en-AU') + (v === o.to ? o.suf : '');
+    if (o.el.textContent !== s) o.el.textContent = s;
+  }
+}
+
+const chromeEl = document.getElementById('chrome'), fill = chromeEl.querySelector('.fill'), cnum = document.getElementById('cnum');
+const edge = document.getElementById('edge'), fade = document.getElementById('fade');
+const INK = [20, 35, 26], CREAM = [244, 241, 232];
+
+function render(t) {
+  let edgeP = -1;
+  for (let i = 0; i < scenes.length; i++) {
+    const s = scenes[i], c = cache[i], a = B[i], b = B[i + 1];
+    const v0 = i === 0 ? -1 : a - TR, v1 = i === scenes.length - 1 ? DUR + 1 : b + TR;
+    const vis = t >= v0 && t <= v1;
+    s.style.visibility = vis ? 'visible' : 'hidden';
+    if (!vis) continue;
+    s.style.zIndex = i + 1;
+    let clip = 'none', tx = 0, dim = 0;
+    if (i > 0 && t < a + TR) { const p = E.inOutQuart(P(t, a - TR, 2 * TR)); clip = `inset(0 0 0 ${((1 - p) * 100).toFixed(4)}%)`; tx = (1 - p) * 160; edgeP = p; }
+    if (i < scenes.length - 1 && t > b - TR) { const p = E.inOutQuart(P(t, b - TR, 2 * TR)); tx = -p * 160; dim = p * 0.45; }
+    s.style.clipPath = clip;
+    c.content.style.transform = `translate3d(${tx.toFixed(3)}px,0,0)`;
+    c.dim.style.opacity = dim.toFixed(4);
+    updateScene(c, t - a);
+  }
+  // wipe edge
+  if (edgeP > 0 && edgeP < 1) { edge.style.opacity = (Math.sin(Math.PI * edgeP) * 0.95).toFixed(3); edge.style.transform = `translate3d(${((1 - edgeP) * 1920 - 1.5).toFixed(2)}px,0,0)`; }
+  else edge.style.opacity = 0;
+
+  // chrome: visible over the content scenes; colour follows the scene on the left side
+  chromeEl.style.opacity = (P(t, B[1] - 0.2, 0.8) * (1 - P(t, B[8] - 0.6, 0.8))).toFixed(4);
+  let idx = 0; for (let k = 1; k < B.length - 1; k++) if (t >= B[k] + 0.22) idx = k;
+  let mix = THEME[idx] === 'ivory' ? 0 : 1;
+  for (let k = 1; k < B.length - 1; k++) {
+    const q = P(t, B[k] + 0.02, 0.36); if (q > 0 && q < 1) { const from = THEME[k - 1] === 'ivory' ? 0 : 1, to = THEME[k] === 'ivory' ? 0 : 1; mix = from + (to - from) * E.inOutSine(q); }
+  }
+  const col = INK.map((v, j) => Math.round(v + (CREAM[j] - v) * mix));
+  chromeEl.style.color = `rgba(${col.join(',')},${(0.72).toFixed(2)})`;
+  cnum.textContent = String(Math.min(7, Math.max(1, idx))).padStart(2, '0');
+  fill.style.width = (t / DUR * 100).toFixed(3) + '%';
+
+  // global fades
+  fade.style.opacity = Math.max(1 - E.inOutSine(P(t, 0, 1.0)), E.inOutSine(P(t, 59.0, 1.0))).toFixed(4);
+}
+window.render = render;
+
+window.ready = (async () => {
+  await Promise.all([...document.images].map(img => img.decode().catch(() => {})));
+  await Promise.all(['360 70px Fraunces', 'italic 340 70px Fraunces', '300 150px Fraunces', '400 25px Inter', '500 25px Inter', '600 16px Inter'].map(f => document.fonts.load(f)));
+  await document.fonts.ready;
+  render(0);
+  return true;
+})();
+
+if (!location.search.includes('render')) {
+  window.ready.then(() => {
+    const q = new URLSearchParams(location.search), start = +(q.get('t') || 0), t0 = performance.now();
+    (function loop() { render((start + (performance.now() - t0) / 1000) % DUR); requestAnimationFrame(loop); })();
+  });
+}
+</script>
+</body>
+</html>
