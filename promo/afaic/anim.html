@@ -1,0 +1,382 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>AFAIC Promo</title>
+<style>html,body{margin:0;background:#000}canvas{display:block}</style></head>
+<body><canvas id="c" width="1920" height="1080"></canvas>
+<script>
+const W = 1920, H = 1080;
+const cv = document.getElementById('c'), g = cv.getContext('2d');
+
+// ---------- palette (AFAIC brand green + warm pops) ----------
+const C = {
+  green: '#71AF62', greenDk: '#4E8A43', deep: '#1E4A2A', cream: '#FFF6E6',
+  gold: '#FFC23C', coral: '#FF6F59', white: '#FFFFFF', ink: '#173A21', mint: '#D9EFD2'
+};
+const F = '"Inter Display","Inter","Noto Color Emoji",sans-serif';
+
+// ---------- easing / timing ----------
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const prog = (t, s, d) => clamp((t - s) / d);
+const eOut = p => 1 - Math.pow(1 - p, 3);
+const eInOut = p => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+const eBack = p => { const c1 = 1.9, c3 = c1 + 1; return p === 0 ? 0 : 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2); };
+const eElastic = p => p === 0 ? 0 : p === 1 ? 1 : Math.pow(2, -10 * p) * Math.sin((p * 10 - .75) * (2 * Math.PI) / 3) + 1;
+const pop = (t, s, d = .55) => eBack(prog(t, s, d));
+const fadeOutAt = (t, end, d = .3) => 1 - prog(t, end - d, d);
+
+// ---------- images ----------
+const IMG = {};
+function load(name, src) { return new Promise(r => { const i = new Image(); i.onload = () => { IMG[name] = i; r(); }; i.src = src; }); }
+
+// ---------- drawing helpers ----------
+function withT(x, y, s, r, a, fn) {
+  if (a <= 0 || s <= 0) return;
+  g.save(); g.translate(x, y); g.rotate(r || 0); g.scale(s, s); g.globalAlpha *= clamp(a); fn(); g.restore();
+}
+function font(size, weight = 900) { return `${weight} ${size}px ${F}`; }
+function text(str, x, y, size, color, { weight = 900, align = 'center', base = 'middle', spacing = 0 } = {}) {
+  g.font = font(size, weight); g.fillStyle = color; g.textAlign = align; g.textBaseline = base;
+  if (spacing) g.letterSpacing = spacing + 'px'; else g.letterSpacing = '0px';
+  g.fillText(str, x, y);
+}
+function measure(str, size, weight = 900) { g.font = font(size, weight); g.letterSpacing = '0px'; return g.measureText(str).width; }
+function rrect(x, y, w, h, r, fill, shadow) {
+  g.beginPath(); g.roundRect(x, y, w, h, r);
+  if (shadow) { g.save(); g.shadowColor = 'rgba(0,0,0,.18)'; g.shadowBlur = 30; g.shadowOffsetY = 12; g.fillStyle = fill; g.fill(); g.restore(); }
+  else { g.fillStyle = fill; g.fill(); }
+}
+function diamond(x, y, s, color, rot = 0) {
+  g.save(); g.translate(x, y); g.rotate(Math.PI / 4 + rot); g.fillStyle = color;
+  g.beginPath(); g.roundRect(-s / 2, -s / 2, s, s, s * .12); g.fill(); g.restore();
+}
+function wrap(str, size, maxW, weight = 900) {
+  const words = str.split(' '), lines = []; let cur = '';
+  for (const w of words) { const t = cur ? cur + ' ' + w : w; if (measure(t, size, weight) > maxW && cur) { lines.push(cur); cur = w; } else cur = t; }
+  if (cur) lines.push(cur); return lines;
+}
+// words pop in one by one
+function popWords(str, x, y, size, color, t, start, step = .08, { weight = 900, align = 'center', hl = [], hlColor = C.gold } = {}) {
+  const words = str.split(' '); const sp = measure(' ', size, weight);
+  const widths = words.map(w => measure(w, size, weight));
+  const total = widths.reduce((a, b) => a + b, 0) + sp * (words.length - 1);
+  let cx = align === 'center' ? x - total / 2 : x;
+  words.forEach((w, i) => {
+    const p = pop(t, start + i * step, .5);
+    const col = hl.includes(i) ? hlColor : color;
+    withT(cx + widths[i] / 2, y + (1 - clamp(p)) * 40, Math.max(0, p), 0, prog(t, start + i * step, .2), () => text(w, 0, 0, size, col, { weight }));
+    cx += widths[i] + sp;
+  });
+}
+function kicker(str, x, y, t, start, bg = C.gold, fg = C.ink, align = 'center') {
+  const s = 30, w = measure(str, s, 900) + str.length * 4 + 60, h = 62;
+  const p = pop(t, start);
+  const ox = align === 'center' ? x : x + w / 2;
+  withT(ox, y, p, -0.03, 1, () => { rrect(-w / 2, -h / 2, w, h, 31, bg); text(str, 0, 2, s, fg, { spacing: 4 }); });
+}
+function chip(str, x, y, t, start, bg, fg, size = 36, align = 'center') {
+  const w = measure(str, size, 800) + 70, h = size * 2.1, p = pop(t, start);
+  const ox = align === 'center' ? x : x + w / 2;
+  withT(ox, y, p, 0, 1, () => { rrect(-w / 2, -h / 2, w, h, h / 2, bg, true); text(str, 0, 2, size, fg, { weight: 800 }); });
+  return w;
+}
+
+// ---------- background with floating diamonds ----------
+function rng(seed) { return () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }; }
+const FLOAT = (() => { const r = rng(42), a = []; for (let i = 0; i < 26; i++) a.push({ x: r() * W, y: r() * H, s: 20 + r() * 70, sp: .3 + r() * .8, ph: r() * 6.28 }); return a; })();
+function bg(color, t, accent = 'rgba(255,255,255,.08)') {
+  g.fillStyle = color; g.fillRect(0, 0, W, H);
+  for (const d of FLOAT) {
+    const y = ((d.y - t * 40 * d.sp) % (H + 200) + H + 200) % (H + 200) - 100;
+    diamond(d.x + Math.sin(t * d.sp + d.ph) * 30, y, d.s, accent, Math.sin(t * .5 + d.ph) * .3);
+  }
+}
+
+// ---------- persistent chrome: emblem bug + progress bar ----------
+function chrome(t) {
+  if (t < 6 || t > 54.5) return;
+  const a = prog(t, 6, .5) * (1 - prog(t, 54, .5));
+  withT(70, 70, 1, 0, a, () => {
+    rrect(-46, -46, 92, 92, 22, 'rgba(255,255,255,.95)');
+    const e = IMG.emblem; const s = 70 / e.height; g.drawImage(e, -e.width * s / 2, -e.height * s / 2, e.width * s, e.height * s);
+  });
+  withT(0, 0, 1, 0, a, () => {
+    g.fillStyle = 'rgba(0,0,0,.15)'; g.fillRect(0, H - 12, W, 12);
+    g.fillStyle = C.gold; g.fillRect(0, H - 12, W * (t / 60), 12);
+  });
+}
+
+// =====================================================================
+// SCENES
+// =====================================================================
+const S = [];
+
+// 1. INTRO  0 – 6
+S.push({ s: 0, e: 6, bg: C.cream, draw(t) {
+  bg(C.cream, t, 'rgba(113,175,98,.10)');
+  // diamond burst
+  const cols = [C.green, C.gold, C.coral, C.greenDk];
+  for (let i = 0; i < 16; i++) {
+    const ang = i / 16 * Math.PI * 2 + t * .2, p = eOut(prog(t, .1 + i * .02, 1.1));
+    const r = 120 + p * (820 + (i % 3) * 120);
+    g.globalAlpha = 1 - .6 * prog(t, 1.6, .8);
+    diamond(W / 2 + Math.cos(ang) * r, 470 + Math.sin(ang) * r * .62, 40 + (i % 4) * 18, cols[i % 4], t * (i % 2 ? 1 : -1) * .6);
+    g.globalAlpha = 1;
+  }
+  // logo card
+  const p = pop(t, .7, .7);
+  withT(W / 2, 430, p, (1 - clamp(p)) * -.15, 1, () => {
+    rrect(-560, -210, 1120, 420, 60, C.white, true);
+    const L = IMG.full, s = 1000 / L.width; g.drawImage(L, -L.width * s / 2, -L.height * s / 2, L.width * s, L.height * s);
+  });
+  popWords('Helping new arrivals settle, connect & thrive!', W / 2, 760, 70, C.ink, t, 2.0, .1, { hl: [3, 4, 6] , hlColor: C.greenDk });
+  chip('📍 Campbelltown · South-West Sydney', W / 2, 880, t, 3.2, C.green, C.white, 40);
+}});
+
+// 2. WHO WE ARE  6 – 12
+S.push({ s: 6, e: 12, bg: C.green, draw(t) {
+  bg(C.green, t);
+  kicker('WHO WE ARE', W / 2, 170, t, .3);
+  popWords('Afghan Fajar Association Inc.', W / 2, 310, 104, C.white, t, .6, .12);
+  popWords('is a community-led Afghan organisation', W / 2, 425, 64, C.ink, t, 1.3, .08);
+  popWords('helping families build a new life in Australia', W / 2, 505, 64, C.ink, t, 1.6, .08, { hl: [4, 5], hlColor: C.gold });
+  const chips = [
+    ['🤝 1 of 4 NSW Afghan Settlement Partnership members', C.white, C.ink],
+    ['🌏 Delivering the federal SETS settlement program', C.deep, C.white],
+    ['🌺 Welcoming Pacific & Timor-Leste arrivals too', C.gold, C.ink],
+  ];
+  chips.forEach((c, i) => chip(c[0], W / 2, 660 + i * 115, t, 2.6 + i * .45, c[1], c[2], 40));
+}});
+
+// 3. HOW LONG  12 – 19
+S.push({ s: 12, e: 19, bg: C.deep, draw(t) {
+  bg(C.deep, t);
+  kicker('HOW LONG WE’VE BEEN AT IT', W / 2, 150, t, .3);
+  popWords('Year 1 of a 3-year mission — and we hit the ground running!', W / 2, 270, 66, C.white, t, .6, .08, { hl: [0, 1, 4, 5] });
+  // timeline
+  const x0 = 220, x1 = W - 220, y = 590, lp = eInOut(prog(t, 1.6, 2.6));
+  g.lineCap = 'round'; g.strokeStyle = 'rgba(255,255,255,.18)'; g.lineWidth = 14;
+  g.beginPath(); g.moveTo(x0, y); g.lineTo(x1, y); g.stroke();
+  g.strokeStyle = C.gold; g.beginPath(); g.moveTo(x0, y); g.lineTo(x0 + (x1 - x0) * lp, y); g.stroke();
+  const M = [
+    ['JUL 2024', 'SETS activity', 'begins', '🚀'],
+    ['OCT 2024', 'Doors open +', 'first swim classes', '🏊'],
+    ['2024–25', 'First full year', 'of programs', '🎉'],
+    ['JUN 2027', 'Funded & growing', 'through 2027', '🌱'],
+  ];
+  M.forEach((m, i) => {
+    const x = x0 + (x1 - x0) * i / 3, st = 1.6 + i * .8, p = pop(t, st, .6);
+    withT(x, y, p, 0, 1, () => {
+      g.beginPath(); g.arc(0, 0, 46, 0, 7); g.fillStyle = i === 3 ? C.coral : C.green; g.fill();
+      g.lineWidth = 8; g.strokeStyle = C.white; g.stroke();
+      text(m[3], 0, 3, 44, C.white, { weight: 400 });
+    });
+    const up = i % 2 === 0;
+    withT(x, up ? y - 150 : y + 150, pop(t, st + .15, .6), 0, 1, () => {
+      text(m[0], 0, up ? -30 : -20, 48, C.gold);
+      text(m[1], 0, up ? 25 : 35, 34, C.white, { weight: 700 });
+      text(m[2], 0, up ? 65 : 75, 34, C.white, { weight: 700 });
+    });
+  });
+  const tp = pop(t, 5.0);
+  withT(W / 2, 935, tp, 0, 1, () => {
+    rrect(-560, -50, 1120, 100, 50, C.gold);
+    text('🗓️  Programs running Jul 2024 → Jun 2027', 0, 3, 42, C.ink, { weight: 900 });
+  });
+}});
+
+// 4. WHAT WE DO  19 – 31
+const SERVICES = [
+  ['🚗', 'Subsidised', 'Driving Lessons'], ['🏊', 'Swim 2 Survive', 'for Kids 5–15'], ['🛟', 'Water Safety', 'Workshops'],
+  ['🏊‍♀️', 'Women-Only', 'Swimming'], ['🧵', 'Women’s Sewing', '+ English'], ['💼', 'Afghan', 'Job Club'],
+  ['🎉', 'Community', 'Celebrations'], ['🙋', 'Volunteer', 'Training'], ['🧭', 'Casework &', 'Referrals'],
+  ['💜', 'DFV Awareness &', 'Women’s Wellbeing'],
+];
+S.push({ s: 19, e: 31, bg: C.cream, draw(t) {
+  bg(C.cream, t, 'rgba(113,175,98,.10)');
+  kicker('WHAT WE DO', W / 2, 120, t, .3, C.green, C.white);
+  popWords('10 ways we help our community thrive', W / 2, 225, 72, C.ink, t, .6, .08, { hl: [0], hlColor: C.coral });
+  const cols = [C.green, C.gold, C.coral, C.deep, C.greenDk];
+  const tw = 320, th = 300, gap = 30, gx = (W - (5 * tw + 4 * gap)) / 2 + tw / 2;
+  SERVICES.forEach((s, i) => {
+    const r = Math.floor(i / 5), c = i % 5, st = 1.5 + i * .55;
+    const x = gx + c * (tw + gap), y = 470 + r * (th + gap);
+    const bob = Math.sin((t - st) * 3 + i) * 6 * prog(t, st + .6, .5);
+    const bg2 = cols[(i + r) % 5], fg = bg2 === C.gold ? C.ink : C.white;
+    withT(x, y + bob, pop(t, st, .6), (1 - clamp(pop(t, st, .6))) * .3, 1, () => {
+      rrect(-tw / 2, -th / 2, tw, th, 36, bg2, true);
+      text(s[0], 0, -55, 110, fg, { weight: 400 });
+      text(s[1], 0, 62, 32, fg, { weight: 800 });
+      text(s[2], 0, 104, 32, fg, { weight: 800 });
+    });
+  });
+}});
+
+// 5. BY THE NUMBERS  31 – 40.5
+const STATS = [
+  [520, 'driving lessons', '52 learner drivers', '🚗'],
+  [400, 'kids’ swim contacts', '2 blocks × 40 young swimmers', '🏊'],
+  [600, 'sewing class contacts', '15 women × 40 weeks', '🧵'],
+  [400, 'water safety contacts', 'before every swim block', '🛟'],
+  [250, 'at Eid + Nowruz', 'Campbelltown Civic Hall', '🎊'],
+  [220, 'at our Iftar dinner', 'incl. local, state & federal MPs', '🌙'],
+];
+S.push({ s: 31, e: 40.5, bg: C.green, draw(t) {
+  bg(C.green, t);
+  kicker('BY THE NUMBERS · FY 2024–25', W / 2, 120, t, .3, C.deep, C.white);
+  const cw = 540, ch = 330, gx = W / 2 - cw - 40;
+  STATS.forEach((s, i) => {
+    const r = Math.floor(i / 3), c = i % 3, st = .7 + i * .45;
+    const x = gx + c * (cw + 40), y = 395 + r * (ch + 40);
+    const p = pop(t, st, .6);
+    withT(x, y, p, 0, 1, () => {
+      rrect(-cw / 2, -ch / 2, cw, ch, 40, C.white, true);
+      text(s[3], -cw / 2 + 64, -ch / 2 + 62, 54, C.ink, { weight: 400 });
+      const v = Math.round(s[0] * eOut(prog(t, st + .1, 1.6)));
+      const pulse = 1 + .08 * Math.sin(prog(t, st + 1.6, .4) * Math.PI);
+      withT(0, -10, pulse, 0, 1, () => text(v.toLocaleString('en-AU'), 0, 0, 150, i % 2 ? C.coral : C.greenDk));
+      text(s[1], 0, 95, 36, C.ink, { weight: 800 });
+      text(s[2], 0, 138, 27, '#5b6b5e', { weight: 600 });
+    });
+  });
+}});
+
+// 6. TOTAL + BAR CHART  40.5 – 47
+const BARS = [
+  ['Women’s sewing', 600], ['Driving lessons', 520], ['Swim 2 Survive', 400], ['Water safety', 400],
+  ['Eid + Nowruz', 250], ['Iftar dinner', 220], ['Women’s swimming', 100], ['Youth leadership camp', 45], ['Community forums', 45], ['Afghan Job Club', 22],
+];
+S.push({ s: 40.5, e: 47, bg: C.cream, draw(t) {
+  bg(C.cream, t, 'rgba(113,175,98,.10)');
+  // left: big total
+  const tot = BARS.reduce((a, b) => a + b[1], 0); // 2,602
+  const v = Math.round(2600 * eOut(prog(t, .5, 2.2)));
+  withT(470, 400, pop(t, .3, .6), -.04, 1, () => {
+    rrect(-360, -230, 720, 460, 50, C.deep, true);
+    text('🎯', -280, -160, 60, C.white, { weight: 400 });
+    text(v.toLocaleString('en-AU') + (t > 2.7 ? '+' : ''), 0, -10, 200, C.gold);
+    text('participant contacts', 0, 120, 44, C.white, { weight: 800 });
+    text('in our first year!', 0, 172, 44, C.white, { weight: 800 });
+  });
+  withT(470, 760, pop(t, 2.9), .02, 1, () => {
+    rrect(-330, -60, 660, 120, 60, C.coral, true);
+    text('👥 18 volunteers · 8 trained', 0, 3, 42, C.white, { weight: 900 });
+  });
+  // right: bars
+  const bx = 960, by = 170, bw = 820, bh = 60, gap = 16;
+  text('Contacts by program', bx, by - 50, 40, C.ink, { align: 'left', weight: 900 });
+  BARS.forEach((b, i) => {
+    const st = .6 + i * .18, p = eOut(prog(t, st, 1.0)), y = by + i * (bh + gap);
+    const len = Math.max(8, (bw - 260) * b[1] / 600 * p);
+    g.globalAlpha = prog(t, st, .2);
+    rrect(bx + 250, y, len, bh, 14, [C.green, C.gold, C.coral, C.greenDk][i % 4]);
+    text(b[0], bx + 235, y + bh / 2 + 2, 28, C.ink, { align: 'right', weight: 700 });
+    text(Math.round(b[1] * p).toString(), bx + 250 + len + 14, y + bh / 2 + 2, 32, C.ink, { align: 'left', weight: 900 });
+    g.globalAlpha = 1;
+  });
+}});
+
+// 7. HIGHLIGHTS  47 – 54
+const WINS = [
+  ['🏆', 'Over-delivered on driving!', '52 learners vs a target of 40 (+30%)'],
+  ['🧠', 'CALD Mental Health Forum', '500+ attendees, with STARTTS & NASP'],
+  ['⛺', 'Youth Leadership Camp', '~45 young leaders, 21–23 Feb 2025'],
+  ['🗣️', 'Community forums', '30 men + 15 women shared their needs'],
+];
+const PARTNERS = ['STARTTS', 'NAVITAS', 'SSI', 'Campbelltown Council', 'Sydney Community Forum', 'CORE Multicultural', 'Western Sydney MRC', 'NRAAG', 'RCAN'];
+S.push({ s: 47, e: 54, bg: C.deep, draw(t) {
+  bg(C.deep, t);
+  kicker('HIGHLIGHTS & ACHIEVEMENTS', W / 2, 120, t, .2);
+  const cw = 820, ch = 190;
+  WINS.forEach((w, i) => {
+    const r = Math.floor(i / 2), c = i % 2, st = .5 + i * .4;
+    const x = W / 2 + (c ? 1 : -1) * (cw / 2 + 20), y = 330 + r * (ch + 30);
+    withT(x, y, pop(t, st, .6), c ? .02 : -.02, 1, () => {
+      rrect(-cw / 2, -ch / 2, cw, ch, 36, i % 3 === 0 ? C.gold : C.white, true);
+      text(w[0], -cw / 2 + 85, 4, 80, C.ink, { weight: 400 });
+      text(w[1], -cw / 2 + 160, -26, 42, C.ink, { align: 'left', weight: 900 });
+      text(w[2], -cw / 2 + 160, 30, 30, '#3d5143', { align: 'left', weight: 700 });
+    });
+  });
+  // partner marquee
+  const a = prog(t, 2.2, .5);
+  g.globalAlpha = a;
+  text('PROUD TO WORK WITH', W / 2, 805, 30, C.gold, { spacing: 6 });
+  g.globalAlpha = 1;
+  let x = W - (t - 2.2) * 420; const y = 900;
+  withT(0, 0, 1, 0, a, () => {
+    for (let k = 0; k < 2; k++) for (const p of PARTNERS) {
+      const w = measure(p, 38, 800) + 80;
+      rrect(x, y - 42, w, 84, 42, 'rgba(255,255,255,.12)'); text(p, x + w / 2, y + 2, 38, C.white, { weight: 800 });
+      x += w + 24;
+    }
+  });
+}});
+
+// 8. COMING UP + OUTRO  54 – 60
+S.push({ s: 54, e: 60, bg: C.green, draw(t) {
+  bg(C.green, t);
+  const out = 1 - prog(t, 2.1, .35);
+  withT(0, 0, 1, 0, out, () => {
+    kicker('COMING UP NEXT', W / 2, 260, t, .1, C.deep, C.white);
+    const items = ['👷 White Card course', '👨‍👩‍👧 Families in Cultural Transition', '🏅 ARYA Awards', '💜 DFV workshops'];
+    items.forEach((s, i) => chip(s, W / 2 + (i % 2 ? 1 : -1) * 400, 470 + Math.floor(i / 2) * 150, t, .35 + i * .25, i % 2 ? C.gold : C.white, C.ink, 42));
+  });
+  if (t < 2.2) return;
+  // final logo card
+  const p = pop(t, 2.3, .7);
+  withT(W / 2, 330, p, 0, 1, () => {
+    rrect(-520, -190, 1040, 380, 56, C.white, true);
+    const L = IMG.full, s = 930 / L.width; g.drawImage(L, -L.width * s / 2, -L.height * s / 2, L.width * s, L.height * s);
+  });
+  popWords('Strong, welcoming communities where', W / 2, 640, 56, C.white, t, 2.9, .06);
+  popWords('everyone feels valued, connected & supported.', W / 2, 715, 56, C.white, t, 3.2, .06, { hl: [3, 4, 6], hlColor: C.gold });
+  withT(W / 2, 880, pop(t, 3.8), 0, 1, () => {
+    rrect(-470, -80, 940, 160, 40, C.white, true);
+    const N = IMG.nasp, s = 140 / 1000; // crop to logo region
+    g.drawImage(N, 150, 260, 1300, 1080, -440, -65, 130 * 1300 / 1080, 130);
+    text('Proud member of the', -260, -22, 30, '#3d5143', { align: 'left', weight: 700 });
+    text('NSW Afghan Settlement Partnership', -260, 22, 34, '#03537E', { align: 'left', weight: 900 });
+  });
+  // burst
+  const cols = [C.gold, C.coral, C.white, C.deep];
+  for (let i = 0; i < 18; i++) {
+    const pp = eOut(prog(t, 2.3, 1.4)), ang = i / 18 * 6.283;
+    const r = 300 + pp * 700;
+    withT(0, 0, 1, 0, 1 - prog(t, 3.0, .8), () => diamond(W / 2 + Math.cos(ang) * r, 330 + Math.sin(ang) * r * .7, 34, cols[i % 4], t * 2));
+  }
+}});
+
+// ---------- transitions: diamond sweep in next scene's colour ----------
+function transition(t) {
+  for (let k = 1; k < S.length; k++) {
+    const T = S[k].s, d = t - T;
+    if (d < -.45 || d > .45) continue;
+    const col = S[k].bg, n = 9, sz = W / n * 1.6;
+    for (let i = 0; i <= n; i++) for (let j = 0; j <= 6; j++) {
+      const off = (i / n) * .25;
+      let s;
+      if (d < 0) s = eInOut(clamp((d + .45 - off) / .2));
+      else s = 1 - eInOut(clamp((d - off) / .2));
+      if (s > 0) diamond(i * W / n, j * H / 5.4, sz * s, col);
+    }
+  }
+}
+
+// ---------- frame ----------
+function draw(t) {
+  g.clearRect(0, 0, W, H);
+  let sc = S[0];
+  for (const s of S) if (t >= s.s) sc = s;
+  sc.draw(t - sc.s);
+  chrome(t);
+  transition(t);
+  if (t > 59.4) { g.fillStyle = `rgba(30,74,42,${prog(t, 59.4, .6)})`; g.fillRect(0, 0, W, H); }
+}
+window.draw = draw;
+window.ready = (async () => {
+  await Promise.all([load('full', 'assets/afaic_full.png'), load('emblem', 'assets/afaic_emblem.png'), load('nasp', 'assets/nasp.jpg')]);
+  await document.fonts.load(font(80, 900)); await document.fonts.load(font(80, 800)); await document.fonts.load(font(80, 700)); await document.fonts.load('400 80px "Noto Color Emoji"');
+  draw(0); return true;
+})();
+// live preview when opened directly
+if (!location.search.includes('render')) window.ready.then(() => { const t0 = performance.now(); (function loop() { draw(((performance.now() - t0) / 1000) % 60); requestAnimationFrame(loop); })(); });
+</script></body></html>
