@@ -10,41 +10,17 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#0B2216}
 svg{position:absolute;left:0;top:0;overflow:visible}
 </style></head><body>
 <div id="bg"></div><div id="glow"></div><div id="motes"></div>
-<svg id="stage" width="1920" height="1080">
-  <defs id="defs">
-    <clipPath id="letterMask"><rect x="120" y="-40" width="270" height="133.6"/></clipPath>
-  </defs>
-  <!-- the full lockup lives in logo units; the icon gets its own group so it can build at centre first -->
-  <g id="lockup">
-    <g id="wordmark" clip-path="url(#letterMask)"></g>
-    <g id="idot"></g>
-    <g id="tagline"></g>
-  </g>
-  <g id="iconWrap"><g id="iconG"></g></g>
-</svg>
+<svg id="stage" width="1920" height="1080"><defs id="defs"></defs></svg>
 <div id="vig"></div>
 
 <script src="../engine.js"></script>
 <script src="../logo-geom.js"></script>
 <script src="../logo-anim.js"></script>
 <script>
-const $ = s => document.querySelector(s), NS = 'http://www.w3.org/2000/svg';
-const mk = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
-const W = AFAIC_WORDMARK, [ICX, ICY] = AFAIC_ICON.center;
+const $ = s => document.querySelector(s);
 
-// final lockup: 1100 px wide, centred on screen
-const LS = 1100 / 383, LX = 960 - 191.5 * LS, LY = 540 - 59 * LS;
-$('#lockup').setAttribute('transform', `translate(${LX} ${LY}) scale(${LS})`);
-const LETTERS = W.letters.map(d => mk('path', { d, fill: '#72B263' }, $('#wordmark')));
-const IDOT = mk('polygon', { points: W.idot, fill: '#5D8844' }, $('#idot'));
-IDOT.style.transformBox = 'fill-box'; IDOT.style.transformOrigin = 'center';
-const TAG = W.tagline.map(d => mk('path', { d, fill: '#F4F1E8' }, $('#tagline')));
-
-// the icon, in the brand's exact colours
-const ICON = createLogoIcon($('#iconG'), $('#defs'), ICON_BRAND, 'brand');
-$('#iconG').setAttribute('transform', `translate(${-ICX} ${-ICY})`);
-const START = { x: 960, y: 540, s: 5.4 };                                   // big, centred while it builds
-const END = { x: LX + ICX * LS, y: LY + ICY * LS, s: LS };                  // its place in the lockup
+// the shared logo reveal (logo-anim.js): 1100 px lockup centred on screen, in brand colours
+const REVEAL = createLogoReveal($('#stage'), $('#defs'), { cx: 960, cy: 540, width: 1100, id: 'brand' });
 
 // soft motes
 let seed = 3; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
@@ -53,20 +29,7 @@ for (let i = 0; i < 26; i++) { const d = document.createElement('div'); d.classN
   $('#motes').appendChild(d); MOTES.push({ d, x: rnd() * 1920, y: rnd() * 1080, sp: 6 + rnd() * 14, ph: rnd() * 6.28 }); }
 
 setup([], 6.0, t => {
-  // 0-3.6: the icon builds at centre; 3.55-4.35: it glides into the lockup
-  const m = E.inOutQuart(P(t, 3.55, 0.8));
-  const x = START.x + (END.x - START.x) * m, y = START.y + (END.y - START.y) * m, s = START.s + (END.s - START.s) * m;
-  $('#iconWrap').setAttribute('transform', `translate(${x.toFixed(2)} ${y.toFixed(2)}) scale(${s.toFixed(4)})`);
-  ICON.update(t, P(t, 5.05, 0.7));
-
-  // wordmark letters rise in, left to right
-  LETTERS.forEach((l, i) => { const q = E.outQuint(P(t, 3.95 + i * 0.08, 0.7)); l.setAttribute('transform', `translate(0 ${(70 * (1 - q)).toFixed(2)})`); });
-  // the diamond over the I drops in and settles
-  const dq = P(t, 4.5, 0.55);
-  IDOT.style.opacity = E.outCubic(P(t, 4.5, 0.12)).toFixed(3);
-  IDOT.style.transform = `translateY(${(-60 * (1 - E.outBackSoft(dq))).toFixed(2)}px) rotate(${(-180 * (1 - E.outCubic(dq))).toFixed(2)}deg)`;
-  // tagline glyphs fade up one after another
-  TAG.forEach((g, i) => { const q = P(t, 4.85 + i * 0.022, 0.5); g.style.opacity = E.outCubic(q).toFixed(3); g.setAttribute('transform', `translate(0 ${(4 * (1 - E.outCubic(q))).toFixed(3)})`); });
+  const m = REVEAL.update(t);
 
   $('#glow').style.opacity = (E.inOutSine(P(t, 0.2, 2.6)) * (1 - 0.5 * m)).toFixed(3);
   for (const o of MOTES) {

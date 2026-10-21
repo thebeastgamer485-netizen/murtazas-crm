@@ -137,3 +137,40 @@ const ICON_BRAND = {
   petal: '#73AA5E', inner: '#5D8844', tip: '#5D8844',          // the logo's exact flat colours
   core: '#FFFFFF', edge: '#B7DCA8', edgeRest: 0.0, guide: '#A9D296', guideOpacity: 0.5, ray: '#E9F7E2', rays: 0.75, burst: 0.8,
 };
+
+// Full logo reveal: the icon builds big at the centre, glides into the lockup, the AFAIC letters rise in,
+// the i-dot drops into place and the tagline writes on (timings in seconds, 0 to ~5.8).
+//   const reveal = createLogoReveal(svgElement, defsElement, { cx: 960, cy: 540, width: 1100, id: 'brand' });
+//   const glide = reveal.update(t);   // returns the 0..1 progress of the icon's glide into the lockup
+function createLogoReveal(svg, defs, o = {}) {
+  const NS = 'http://www.w3.org/2000/svg', W = AFAIC_WORDMARK, [ICX, ICY] = AFAIC_ICON.center;
+  const cx = o.cx ?? 960, cy = o.cy ?? 540, width = o.width ?? 1100, id = o.id ?? 'brand';
+  const mk = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+  const clip = mk('clipPath', { id: id + '-letters' }, defs);
+  mk('rect', { x: 120, y: -40, width: 270, height: 133.6 }, clip);          // letters rise from below this line
+  const LS = width / 383, LX = cx - 191.5 * LS, LY = cy - 59 * LS;
+  const lockup = mk('g', { transform: `translate(${LX} ${LY}) scale(${LS})` }, svg);
+  const wordmark = mk('g', { 'clip-path': `url(#${id}-letters)` }, lockup);
+  const LETTERS = W.letters.map(d => mk('path', { d, fill: '#72B263' }, wordmark));
+  const IDOT = mk('polygon', { points: W.idot, fill: '#5D8844' }, mk('g', {}, lockup));
+  IDOT.style.transformBox = 'fill-box'; IDOT.style.transformOrigin = 'center';
+  const tag = mk('g', {}, lockup);
+  const TAG = W.tagline.map(d => mk('path', { d, fill: o.taglineColor ?? '#F4F1E8' }, tag));
+  const iconWrap = mk('g', {}, svg), iconG = mk('g', { transform: `translate(${-ICX} ${-ICY})` }, iconWrap);
+  const ICON = createLogoIcon(iconG, defs, o.palette ?? ICON_BRAND, id);
+  const START = { x: cx, y: cy, s: 5.4 * width / 1100 }, END = { x: LX + ICX * LS, y: LY + ICY * LS, s: LS };
+
+  function update(t) {
+    const m = E.inOutQuart(P(t, 3.55, 0.8));          // 0-3.6 the icon builds at centre; 3.55-4.35 it glides into the lockup
+    const x = START.x + (END.x - START.x) * m, y = START.y + (END.y - START.y) * m, s = START.s + (END.s - START.s) * m;
+    iconWrap.setAttribute('transform', `translate(${x.toFixed(2)} ${y.toFixed(2)}) scale(${s.toFixed(4)})`);
+    ICON.update(t, P(t, 5.05, 0.7));
+    LETTERS.forEach((l, i) => { const q = E.outQuint(P(t, 3.95 + i * 0.08, 0.7)); l.setAttribute('transform', `translate(0 ${(70 * (1 - q)).toFixed(2)})`); });
+    const dq = P(t, 4.5, 0.55);
+    IDOT.style.opacity = E.outCubic(P(t, 4.5, 0.12)).toFixed(3);
+    IDOT.style.transform = `translateY(${(-60 * (1 - E.outBackSoft(dq))).toFixed(2)}px) rotate(${(-180 * (1 - E.outCubic(dq))).toFixed(2)}deg)`;
+    TAG.forEach((g, i) => { const q = P(t, 4.85 + i * 0.022, 0.5); g.style.opacity = E.outCubic(q).toFixed(3); g.setAttribute('transform', `translate(0 ${(4 * (1 - E.outCubic(q))).toFixed(3)})`); });
+    return m;
+  }
+  return { update, START, END };
+}
