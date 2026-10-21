@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>AFAIC — Youth Leadership Camp</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#FFE14D}
+body{font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased;color:#000}
+#dots{position:absolute;left:-200px;top:-200px;width:2400px;height:1600px;background-image:radial-gradient(#000 2.2px,transparent 2.6px);background-size:44px 44px;opacity:.13}
+.scene{position:absolute;left:0;top:0;width:1920px;height:980px;visibility:hidden}
+.abs{position:absolute}
+.big{font-weight:900;letter-spacing:-.05em;line-height:.84;text-transform:uppercase;white-space:nowrap}
+.card{position:absolute;border:6px solid #000;box-shadow:14px 14px 0 #000;background:#fff}
+.pink{background:#FF5C8A}.cyan{background:#5CE1E6}.white{background:#fff}.black{background:#000;color:#FFE14D}
+.lab{font:900 34px/1.05 Inter;text-transform:uppercase;letter-spacing:-.01em}
+.sticker{position:absolute;border:6px solid #000;box-shadow:10px 10px 0 #000;font:900 64px/1 Inter;text-transform:uppercase;padding:18px 30px;white-space:nowrap}
+#marq{position:absolute;left:0;top:980px;width:1920px;height:100px;background:#000;overflow:hidden}
+#marq .run{position:absolute;top:22px;left:0;white-space:nowrap;font:900 52px/1 Inter;color:#FFE14D;letter-spacing:-.01em}
+#marq .run b{color:#FF5C8A;padding:0 26px}
+.item{display:flex;align-items:center;gap:28px;padding:0 34px;font:900 46px/1 Inter;text-transform:uppercase}
+.item .ar{font-size:54px}
+#fade{position:absolute;inset:0;background:#000;opacity:0;z-index:60}
+</style></head><body>
+<div id="dots"></div>
+
+<!-- S1  HEY YOU -->
+<div class="scene" id="S1">
+  <div class="abs big" id="hey" style="left:110px;top:110px;font-size:330px">HEY</div>
+  <div class="abs big" id="you" style="left:110px;top:440px;font-size:330px">YOU.</div>
+  <div class="sticker pink" id="yes" style="left:1140px;top:330px;font-size:84px">YES, YOU!</div>
+  <div class="sticker cyan" id="lead" style="left:1260px;top:600px;font-size:44px">WANT TO LEAD?</div>
+</div>
+
+<!-- S2  YOUTH LEADERSHIP CAMP -->
+<div class="scene" id="S2">
+  <div class="abs big" id="t1" style="left:110px;top:80px;font-size:210px">YOUTH</div>
+  <div class="abs big black" id="t2" style="left:96px;top:300px;font-size:200px;padding:14px 30px 26px">LEADERSHIP</div>
+  <div class="abs big" id="t3" style="left:110px;top:560px;font-size:210px">CAMP</div>
+  <div class="abs" id="t3bar" style="left:110px;top:750px;width:560px;height:22px;background:#FF5C8A;border:5px solid #000;transform-origin:0 50%"></div>
+  <div class="card cyan" id="date" style="left:770px;top:610px;padding:22px 34px"><div class="lab" style="font-size:30px">Last camp</div><div class="lab" style="font-size:58px;margin-top:6px">21–23 Feb 2025</div></div>
+  <svg class="abs" id="badge" width="330" height="330" style="left:1480px;top:70px" viewBox="0 0 330 330">
+    <defs><path id="circ" d="M165 165 m-122 0 a122 122 0 1 1 244 0 a122 122 0 1 1 -244 0"/></defs>
+    <circle cx="165" cy="165" r="158" fill="#fff" stroke="#000" stroke-width="6"/>
+    <text font-family="Inter" font-weight="900" font-size="31" letter-spacing="3"><textPath href="#circ">AFAIC · YOUTH · LEADERSHIP · CAMP ·</textPath></text>
+    <path d="M165 112 l14 38 40 2 -31 25 11 39 -34 -22 -34 22 11 -39 -31 -25 40 -2z" fill="#FF5C8A" stroke="#000" stroke-width="5" stroke-linejoin="round"/>
+  </svg>
+</div>
+
+<!-- S3  STATS -->
+<div class="scene" id="S3">
+  <div class="abs big" id="lt" style="left:110px;top:80px;font-size:110px">LAST TIME:</div>
+  <div class="card pink" id="st1" style="left:110px;top:260px;width:510px;height:580px;padding:36px"><div class="big num" style="font-size:300px">0</div><div class="lab" style="margin-top:60px;font-size:46px">young<br>leaders</div></div>
+  <div class="card cyan" id="st2" style="left:705px;top:260px;width:510px;height:580px;padding:36px"><div class="big num" style="font-size:300px">0</div><div class="lab" style="margin-top:60px;font-size:46px">days<br>together</div></div>
+  <div class="card white" id="st3" style="left:1300px;top:260px;width:510px;height:580px;padding:36px"><div class="big" style="font-size:300px">0</div><div class="lab" style="margin-top:60px;font-size:46px">boring<br>moments</div></div>
+</div>
+
+<!-- S4  WHAT YOU GET -->
+<div class="scene" id="S4">
+  <div class="abs big" id="wyg" style="left:110px;top:70px;font-size:120px">WHAT YOU GET</div>
+  <div class="card white item" id="i1" style="left:110px;top:250px;width:880px;height:126px"><span class="ar">→</span>Hiking &amp; outdoor challenges</div>
+  <div class="card pink item" id="i2" style="left:110px;top:404px;width:880px;height:126px"><span class="ar">→</span>Leadership workshops</div>
+  <div class="card cyan item" id="i3" style="left:110px;top:558px;width:880px;height:126px"><span class="ar">→</span>Public speaking</div>
+  <div class="card white item" id="i4" style="left:110px;top:712px;width:880px;height:126px"><span class="ar">→</span>Friends for life</div>
+  <div class="card" id="ph" style="left:1080px;top:230px;width:730px;height:620px;overflow:hidden;padding:0"><img src="../../assets/partners.jpg" style="width:100%;height:100%;object-fit:cover;object-position:40% 50%"></div>
+</div>
+
+<!-- S5  90+ -->
+<div class="scene" id="S5">
+  <div class="abs big num" id="ninety" style="left:96px;top:60px;font-size:520px">0</div>
+  <div class="card white" id="done" style="left:110px;top:620px;padding:30px 40px"><div class="lab" style="font-size:60px">young people have<br>already done it.</div></div>
+  <div class="sticker pink" id="next" style="left:1110px;top:340px;font-size:86px">YOU'RE NEXT.</div>
+</div>
+
+<!-- S6  CTA -->
+<div class="scene" id="S6">
+  <div class="abs big" id="reg" style="left:110px;top:70px;font-size:122px">REGISTER YOUR INTEREST</div>
+  <div class="card white" id="cta" style="left:110px;top:270px;width:1080px;height:580px;padding:0">
+    <div class="ctarow" style="position:absolute;left:44px;top:46px;font:900 92px/1 Inter;letter-spacing:-.03em">afaic.org.au</div>
+    <div style="position:absolute;left:0;right:0;top:186px;height:6px;background:#000"></div>
+    <div class="ctarow" style="position:absolute;left:44px;top:230px;font:900 92px/1 Inter;letter-spacing:-.03em">0481 188 235</div>
+    <div style="position:absolute;left:0;right:0;top:370px;height:6px;background:#000"></div>
+    <div class="ctarow" style="position:absolute;left:44px;top:416px;font:900 64px/1.1 Inter;letter-spacing:-.02em">@afaic1 <span style="font-weight:700;font-size:40px">on Instagram &amp; Facebook</span></div>
+  </div>
+  <div class="card white" id="logoc" style="left:1290px;top:270px;width:520px;height:270px;display:flex;align-items:center;justify-content:center"><img src="../../assets/logo.svg" style="width:430px"></div>
+  <div class="sticker black" id="signup" style="left:1360px;top:640px;font-size:96px">SIGN UP!</div>
+</div>
+
+<div id="marq"><div class="run" id="run"></div></div>
+<div id="fade"></div>
+
+<script src="../engine.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+$('#run').innerHTML = Array(10).fill('LEAD<b>/</b>CONNECT<b>/</b>GROW<b>/</b>').join('');
+
+const T = [];
+// every scene arrives from the right and leaves to the left (same push each time)
+const SC = [['#S1', 0, 3.5], ['#S2', 3.5, 8.5], ['#S3', 8.5, 13.5], ['#S4', 13.5, 20], ['#S5', 20, 25], ['#S6', 25, 30.5]];
+SC.forEach(([id, a, b], i) => {
+  // true push: the outgoing and incoming scenes move together, so they never overlap
+  const x = i === 0 ? [[0, 0]] : [[a - 0.3, 1920], [a + 0.25, 0, 'inOutQuart']];
+  if (b < 30) x.push([b - 0.3, 0], [b + 0.25, -1920, 'inOutQuart']);
+  T.push([id, { x, o: [[i === 0 ? -1 : a - 0.3, 0], [i === 0 ? -0.99 : a - 0.299, 1, 'step'], [b + 0.25, 1], [b + 0.251, 0, 'step']] }]);
+});
+
+// card drop: falls from above, lands with a little overshoot, shadow "presses" on impact
+function drop(t0, rot = 0, from = -1100, shadow = 14) {
+  return { o: [[t0, 0], [t0 + 0.01, 1, 'step']], y: [[t0, from], [t0 + 0.55, 0, 'outBackSoft']], r: [[t0, rot * 3], [t0 + 0.6, rot, 'outBackSoft']],
+    fn: (el, t) => { const p = P(t, t0 + 0.4, 0.3); const s = shadow + (1 - E.outCubic(p)) * 14 * (p > 0 ? 1 : 0); el.style.boxShadow = `${s}px ${s}px 0 #000`; } };
+}
+const slamIn = (t0, from = 1.6, rot = 0) => ({ o: [[t0, 0], [t0 + 0.01, 1, 'step']], s: [[t0, from], [t0 + 0.4, 1, 'outBackSoft']], r: [[t0, rot - 8], [t0 + 0.45, rot, 'outBackSoft']] });
+const wobble = (t0, rot, amp = 2.5, sp = 6) => ({ fn: (el, t) => { if (t > t0) el.style.transform += ` rotate(${(Math.sin((t - t0) * sp) * amp * Math.min(1, (t - t0) * 2)).toFixed(3)}deg)`; } });
+const count = (sel, to, t0, d = 1.2, suf = '') => T.push([sel, { fn: (el, t) => { const v = Math.round(to * E.outExpo(P(t, t0, d))); el.textContent = v + (v === to ? suf : ''); } }]);
+
+// S1
+T.push(['#hey', slamIn(0.5, 1.5)]);
+T.push(['#you', slamIn(1.0, 1.5)]);
+T.push(['#yes', M(slamIn(1.75, 2.0, -8), wobble(2.2, 0, 2))]);
+T.push(['#lead', drop(2.5, 4)]);
+// S2
+T.push(['#t1', M(show(3.75), { x: [[3.75, -700], [4.2, 0, 'outExpo']] })]);
+T.push(['#t2', M(show(4.15), { x: [[4.15, 1400], [4.6, 0, 'outExpo']] })]);
+T.push(['#t3', M(show(4.55), { x: [[4.55, -700], [5.0, 0, 'outExpo']] })]);
+T.push(['#t3bar', M(show(4.9), { sx: [[4.9, 0], [5.3, 1, 'outExpo']] })]);
+T.push(['#date', drop(5.5, -3)]);
+T.push(['#badge', { o: [[4.0, 0], [4.01, 1, 'step']], s: [[4.0, 0], [4.5, 1, 'outBackSoft']], fn: (el, t) => el.style.transform += ` rotate(${(t * 40).toFixed(2)}deg)` }]);
+// S3
+T.push(['#lt', M(show(8.7), { x: [[8.7, -900], [9.1, 0, 'outExpo']] })]);
+T.push(['#st1', drop(9.0, -2)]); T.push(['#st2', drop(9.5, 1.5)]); T.push(['#st3', drop(10.0, -1)]);
+count('#st1 .num', 45, 9.4, 1.4); count('#st2 .num', 3, 9.9, 0.8);
+// S4
+T.push(['#wyg', M(show(13.7), { x: [[13.7, -1100], [14.1, 0, 'outExpo']] })]);
+T.push(['#ph', drop(14.0, 3, -1200)]);
+['#i1', '#i2', '#i3', '#i4'].forEach((id, i) => T.push([id, M({ o: [[14.5 + i * 0.75, 0], [14.51 + i * 0.75, 1, 'step']] }, { x: [[14.5 + i * 0.75, -1100], [14.5 + i * 0.75 + 0.5, 0, 'outBackSoft']] })]));
+// S5
+T.push(['#ninety', slamIn(20.25, 1.3)]); count('#ninety', 90, 20.25, 1.5, '+');
+T.push(['#done', drop(21.25, -2)]);
+T.push(['#next', M(slamIn(22.5, 2.2, 8), wobble(23.0, 0, 3, 7))]);
+// S6
+T.push(['#reg', M(show(25.2), { x: [[25.2, -1900], [25.65, 0, 'outExpo']] })]);
+T.push(['#cta', drop(25.75, -1)]);
+T.push(['#logoc', drop(26.25, 2)]);
+T.push(['#signup', M(slamIn(27.0, 2.2, -10), wobble(27.5, 0, 4, 8))]);
+T.push(['#fade', { o: [[29.4, 0], [30.0, 1, 'linear']] }]);
+
+const UNIT = $('#run').scrollWidth / 10;
+setup(T, 30, t => {
+  $('#run').style.transform = `translate3d(${(-(t * 180) % UNIT).toFixed(2)}px,0,0)`;
+  $('#dots').style.transform = `translate3d(${((t * 22) % 44).toFixed(2)}px,${((t * 22) % 44).toFixed(2)}px,0)`;
+});
+</script>
+</body></html>

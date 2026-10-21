@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>AFAIC — We Support New Beginnings (kinetic)</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#0B0B0B}
+body{font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased;color:#fff}
+.abs{position:absolute;left:0;top:0}
+.k{font-weight:900;letter-spacing:-.055em;line-height:.8;white-space:nowrap;will-change:transform}
+.mask{position:absolute;overflow:hidden}
+.green{color:#73AA5E}.gold{color:#FFC23C}.out{color:transparent;-webkit-text-stroke:4px #fff}
+.layer{position:absolute;inset:0;overflow:hidden;visibility:hidden}
+.card{position:absolute;inset:0;visibility:hidden;will-change:transform}
+.lab{font:700 22px/1 Inter;letter-spacing:.32em;text-transform:uppercase}
+#bug{position:absolute;right:56px;bottom:48px;width:54px;opacity:0}
+#fade{position:absolute;inset:0;background:#0B0B0B;opacity:0;z-index:50}
+.photo-text{background:url(../../assets/cover.jpg) 50% 40%/2400px auto no-repeat;-webkit-background-clip:text;background-clip:text;color:transparent}
+</style></head><body>
+
+<!-- 1  NEW ___ -->
+<div class="layer" id="L1">
+  <div class="k abs" id="new" style="left:120px;top:250px;font-size:240px">NEW</div>
+  <div class="mask" style="left:110px;top:500px;width:1800px;height:250px">
+    <div class="k abs w" style="left:10px;top:18px;font-size:240px">COUNTRY.</div>
+    <div class="k abs w" style="left:10px;top:18px;font-size:240px">LANGUAGE.</div>
+    <div class="k abs w" style="left:10px;top:18px;font-size:240px">HOME.</div>
+    <div class="k abs w green" style="left:10px;top:18px;font-size:240px">BEGINNINGS.</div>
+  </div>
+  <div class="abs" id="ul" style="left:120px;top:790px;width:1640px;height:14px;background:#73AA5E;transform-origin:0 50%"></div>
+  <div class="abs lab" id="cap1" style="left:122px;top:860px;color:#888">Afghan Fajar Association Inc. · Campbelltown</div>
+</div>
+
+<!-- 2  SINCE 2009 / WALKING BESIDE -->
+<div class="layer" id="L2">
+  <div class="k abs" id="since" style="left:120px;top:150px;font-size:150px">SINCE</div>
+  <div class="k abs out" id="y2009" style="left:104px;top:320px;font-size:560px">2009</div>
+  <div class="k abs green" id="y2009f" style="left:104px;top:320px;font-size:560px">2009</div>
+  <div class="mask" style="left:110px;top:260px;width:1800px;height:120px"><div class="k abs l2" style="left:10px;top:8px;font-size:118px">WALKING BESIDE</div></div>
+  <div class="mask" style="left:110px;top:410px;width:1800px;height:120px"><div class="k abs l2" style="left:10px;top:8px;font-size:118px">AFGHAN &amp; MULTICULTURAL</div></div>
+  <div class="mask" style="left:110px;top:560px;width:1800px;height:120px"><div class="k abs l2" style="left:10px;top:8px;font-size:118px">FAMILIES IN</div></div>
+  <div class="mask" style="left:110px;top:710px;width:1800px;height:120px"><div class="k abs l2 gold" style="left:10px;top:8px;font-size:118px">SOUTH-WEST SYDNEY.</div></div>
+</div>
+
+<!-- 3  cards -->
+<div id="cards"></div>
+
+<!-- 3b TOGETHER -->
+<div class="layer" id="L3b" style="background:#0B0B0B">
+  <div class="k abs photo-text" id="together" style="left:100px;top:360px;font-size:322px">TOGETHER.</div>
+</div>
+
+<!-- 4  2,600+ -->
+<div class="layer" id="L4">
+  <div class="abs lab" id="fy" style="left:124px;top:150px;color:#73AA5E">In 2024–25</div>
+  <div class="k abs" id="count" style="left:104px;top:230px;font-size:420px;font-variant-numeric:tabular-nums">0</div>
+  <div class="mask" style="left:110px;top:640px;width:1800px;height:120px"><div class="k abs" id="m1" style="left:10px;top:8px;font-size:118px">MOMENTS OF SUPPORT.</div></div>
+  <div class="mask" style="left:110px;top:790px;width:1800px;height:120px"><div class="k abs gold" id="m2" style="left:10px;top:8px;font-size:118px">IN ONE YEAR.</div></div>
+</div>
+
+<!-- 5  WE SUPPORT NEW BEGINNINGS -->
+<div class="layer" id="L5">
+  <div id="stack" class="abs" style="left:0;top:0;width:1920px;height:1080px;transform-origin:120px 70px">
+    <div class="k abs" id="we" style="left:120px;top:70px;font-size:230px">WE</div>
+    <div class="k abs green" id="support" style="left:112px;top:270px;font-size:310px">SUPPORT</div>
+    <div class="abs" id="bar5" style="left:120px;top:540px;width:1060px;height:12px;background:#fff;transform-origin:0 50%"></div>
+    <div class="k abs out" id="nw" style="left:116px;top:580px;font-size:230px">NEW</div>
+    <div class="k abs gold" id="beg" style="left:116px;top:780px;font-size:200px">BEGINNINGS.</div>
+  </div>
+  <img class="abs" id="logo" src="../../assets/logo_rev.svg" style="left:120px;top:842px;width:430px">
+  <div class="abs lab" id="url" style="left:1240px;top:900px;color:#ccc;letter-spacing:.2em">afaic.org.au · Campbelltown NSW</div>
+</div>
+
+<img id="bug" src="../../assets/emblem.svg">
+<div id="fade"></div>
+
+<script src="../engine.js"></script>
+<script>
+// ---------------- cards (one statement per beat-second)
+const CARDS = [
+  ['LEARN TO', 'DRIVE.', '#73AA5E', '#0B0B0B'],
+  ['LEARN TO', 'SWIM.', '#0B0B0B', '#FFFFFF'],
+  ['LEARN TO', 'SEW.', '#FFC23C', '#0B0B0B'],
+  ['FIND', 'A JOB.', '#F4F1E8', '#0B0B0B'],
+  ['FIND', 'YOUR PEOPLE.', '#0B0B0B', '#73AA5E'],
+  ['FIND', 'YOUR VOICE.', '#73AA5E', '#FFFFFF'],
+];
+const cw = document.getElementById('cards');
+CARDS.forEach((c, i) => cw.insertAdjacentHTML('beforeend', `<div class="card" id="c${i}" style="background:${c[2]};color:${c[3]};z-index:${10 + i}">
+  <div class="k abs c-a" style="left:120px;top:240px;font-size:170px">${c[0]}</div>
+  <div class="k abs c-b" style="left:108px;top:430px;font-size:${c[1].length > 9 ? 250 : 330}px">${c[1]}</div></div>`));
+
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const T = [];
+
+// layer visibility
+const layer = (sel, a, b) => T.push([sel, { o: [[a, 0], [a + 0.001, 1, 'step'], [b, 1], [b + 0.001, 0, 'step']] }]);
+layer('#L1', 0, 6); layer('#L2', 6, 11); layer('#L3b', 17, 19); layer('#L4', 19, 24); layer('#L5', 24, 30.1);
+
+// 1 — NEW + rolling word
+T.push(['#new', M(slam(1.0, 1.6, 0.45), { y: [[1.0, 30], [1.45, 0, 'outExpo']] })]);
+const words = $$('.w'), wt = [1.5, 2.5, 3.5, 4.5];
+words.forEach((w, i) => {
+  const a = wt[i], b = wt[i + 1];
+  const y = [[a - 0.001, 260], [a + 0.32, 0, 'outExpo']];
+  if (b) y.push([b - 0.06, 0], [b + 0.22, -280, 'inCubic']);
+  T.push([w, { y, ...(i === 3 ? { s: [[a, 1.12], [a + 0.6, 1, 'outExpo']] } : {}) }]);
+});
+T.push(['#ul', { sx: [[4.6, 0], [5.2, 1, 'outExpo']] }]);
+T.push(['#cap1', M(show(4.8, null, 0.4), rise(4.8, 20, 0.6))]);
+
+// 2 — SINCE 2009, then the four lines
+T.push(['#since', M(slide(6.0, -200, 0.45), { o: [[6.0, 0], [6.15, 1, 'linear'], [7.85, 1], [8.0, 0, 'linear']] })]);
+T.push(['#y2009', M(slam(6.25, 1.25, 0.6), { o: [[6.25, 0], [6.35, 1, 'linear'], [7.85, 1], [8.0, 0, 'linear']] })]);
+T.push(['#y2009f', M(slam(6.25, 1.25, 0.6), { clip: [[6.9, [0, 100, 0, 0]], [7.5, [0, 0, 0, 0], 'inOutQuart']], o: [[6.9, 0], [6.91, 1, 'step'], [7.85, 1], [8.0, 0, 'linear']] })]);
+$$('.l2').forEach((el, i) => T.push([el, { y: [[8.0 + i * 0.5, 130], [8.0 + i * 0.5 + 0.35, 0, 'outExpo'], [10.85, 0], [11.0, -130, 'inCubic']] }]));
+
+// 3 — cards push up on each beat
+CARDS.forEach((c, i) => {
+  const t = 11 + i, el = $('#c' + i);
+  T.push([el, { o: [[t - 0.22, 0], [t - 0.219, 1, 'step'], [i === 5 ? 17.0 : t + 1.2, 1], [i === 5 ? 17.001 : t + 1.201, 0, 'step']],
+                y: [[t - 0.22, 1080], [t, 0, 'outQuart'], [t + 1, 0], [t + 1.2, -160, 'inOutCubic']] }]);
+  T.push([el.querySelector('.c-a'), { x: [[t - 0.05, -60], [t + 0.35, 0, 'outExpo']], o: [[t - 0.05, 0], [t + 0.1, 1, 'linear']] }]);
+  T.push([el.querySelector('.c-b'), M(slam(t + 0.12, 1.25, 0.4), { o: [[t + 0.1, 0], [t + 0.16, 1, 'linear']] })]);
+});
+T.push(['#together', M(slam(17.0, 1.5, 0.7), { fn: (el, t) => {
+  const p = P(t, 17, 2); el.style.backgroundSize = `${2400 - 260 * p}px auto`; el.style.backgroundPosition = `${50 + 6 * p}% 40%`; } })]);
+
+// 4 — counter
+T.push(['#fy', M(show(19.0, null, 0.3), rise(19.0, 20, 0.5))]);
+T.push(['#count', M(slam(19.0, 1.15, 0.5), { fn: (el, t) => {
+  const v = Math.round(2600 * E.outExpo(P(t, 19.0, 1.7))); el.textContent = v.toLocaleString('en-AU') + (v === 2600 ? '+' : ''); } })]);
+T.push(['#m1', { y: [[20.5, 130], [20.85, 0, 'outExpo']] }]);
+T.push(['#m2', { y: [[21.5, 130], [21.85, 0, 'outExpo']] }]);
+T.push(['#L4', { x: [[22.5, 0], [23.95, -40, 'inCubic']] }]);
+
+// 5 — final stack, then logo
+T.push(['#we', M(slam(24.0, 1.5), show(24.0))]);
+T.push(['#support', M(slam(24.5, 1.4), show(24.5))]);
+T.push(['#bar5', { sx: [[24.75, 0], [25.15, 1, 'outExpo']] }]);
+T.push(['#nw', M(slam(25.0, 1.4), show(25.0))]);
+T.push(['#beg', M(slam(25.5, 1.4), show(25.5))]);
+T.push(['#stack', { s: [[27.0, 1], [27.8, 0.74, 'inOutQuart']], y: [[27.0, 0], [27.8, -20, 'inOutQuart']] }]);
+T.push(['#logo', M(show(27.5, null, 0.5), rise(27.5, 40, 0.8))]);
+T.push(['#url', M(show(27.8, null, 0.5), rise(27.8, 30, 0.8))]);
+T.push(['#bug', { o: [[1.5, 0], [2.0, 0.85], [26.6, 0.85], [27.0, 0]] }]);
+T.push(['#fade', { o: [[29.3, 0], [30.0, 1, 'linear']] }]);
+
+setup(T, 30);
+</script>
+</body></html>
