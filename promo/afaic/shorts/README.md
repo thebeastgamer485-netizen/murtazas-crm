@@ -5,6 +5,7 @@
 | `kinetic/` | Kinetic typography | `afaic_kinetic_we_support_new_beginnings.mp4` | Manifesto: new country, new beginnings, since 2009, 2,600+ moments of support in 2024–25 |
 | `eid/` | Cultural geometric | `afaic_eid_mubarak.mp4` | Eid greeting in Dari, Pashto and English (no year, so it can be reused every Eid) |
 | `youth/` | Neo-brutalist | `afaic_youth_leadership_camp.mp4` | Youth Leadership Camp recruitment: last camp 21–23 Feb 2025, 45 young leaders, 90+ alumni |
+| `arya/` | Black-and-gold gala motion design | `afaic_arya_awards_2027.mp4` | ARYA Awards 2027 call for nominations: six categories, 40+ honoured each year, 500+ guests; date to be announced |
 
 Each folder has `index.html` (the animation; serve `promo/afaic/` and open it in Chrome, `?t=12` starts at 12 s) and `music.py` (its original soundtrack).
 `engine.js` is the shared keyframe engine, `afaic_synth.py` the shared synthesiser, `render.mjs` the frame renderer.

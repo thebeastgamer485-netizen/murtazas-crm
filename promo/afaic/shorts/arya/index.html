@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>ARYA Awards 2027 — call for nominations</title>
+<style>
+@font-face{font-family:'Fraunces';src:url(../../fonts/Fraunces.woff2) format('woff2');font-weight:100 900}
+@font-face{font-family:'Fraunces';src:url(../../fonts/Fraunces-Italic.woff2) format('woff2');font-weight:100 900;font-style:italic}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#070605}
+body{font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased;color:#F6EBD2}
+.abs{position:absolute}
+.center{position:absolute;left:0;width:1920px;text-align:center}
+.serif{font-family:Fraunces,serif;font-optical-sizing:auto}
+.gold{background:linear-gradient(100deg,#7A5A22 0%,#C9A24A 18%,#FFF0BF 30%,#E2B95A 42%,#9C7630 58%,#E9C46A 76%,#FFF6D6 88%,#B98E3E 100%);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent}
+.cap{font:600 18px/1 Inter;letter-spacing:.42em;text-transform:uppercase;color:#D9B565}
+#glow{position:absolute;inset:0;background:radial-gradient(ellipse 55% 60% at 50% 45%,rgba(120,84,30,.42) 0%,rgba(40,26,8,.25) 45%,rgba(0,0,0,0) 75%)}
+.beam{position:absolute;top:-80px;width:900px;height:1400px;transform-origin:450px 0;mix-blend-mode:screen;
+  background:linear-gradient(to bottom,rgba(255,226,160,.30),rgba(255,226,160,.06) 60%,rgba(255,226,160,0));clip-path:polygon(47% 0,53% 0,100% 100%,0 100%)}
+#bokeh{position:absolute;inset:0}
+.bk{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,224,150,.9) 0%,rgba(255,200,110,.35) 40%,rgba(255,200,110,0) 70%);mix-blend-mode:screen}
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse 75% 75% at 50% 50%,rgba(0,0,0,0) 50%,rgba(0,0,0,.7) 100%)}
+.scene{position:absolute;inset:0;visibility:hidden}
+.ln{display:block;overflow:hidden;padding-bottom:.12em;margin-bottom:-.12em}
+.ln>.in{display:inline-block;will-change:transform}
+.ccard{position:absolute;width:500px;height:250px;border:1.5px solid rgba(217,181,101,.55);background:linear-gradient(160deg,rgba(60,42,14,.55),rgba(14,10,4,.55));text-align:center}
+.ccard svg{position:absolute;left:210px;top:38px;width:80px;height:80px;overflow:visible}
+.ccard .t{position:absolute;left:0;right:0;top:146px;font:400 38px/1.1 Fraunces;letter-spacing:-.01em}
+.ccard .s{position:absolute;left:0;right:0;top:196px;font:500 16px/1 Inter;letter-spacing:.24em;text-transform:uppercase;color:#BFA46A}
+.stat .n{font:300 120px/1 Fraunces;letter-spacing:-.03em}
+.stat .l{font:500 20px/1.35 Inter;color:#CDBB93;margin-top:10px}
+#frame{position:absolute;left:1010px;top:200px;width:800px;height:640px}
+#frame .ph{position:absolute;inset:18px;overflow:hidden}
+#frame img{width:100%;height:100%;object-fit:cover;object-position:60% 45%;filter:sepia(.25) saturate(.9) contrast(1.05)}
+#frame .ph:after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,rgba(7,6,5,.55),rgba(7,6,5,0) 40%)}
+#frame svg{position:absolute;left:0;top:0;overflow:visible}
+.pill{display:inline-block;border:1.5px solid #D9B565;border-radius:60px;padding:22px 46px;font:600 30px/1 Inter;letter-spacing:.06em;color:#F6EBD2}
+.pill span{color:#D9B565;padding:0 20px}
+#fade{position:absolute;inset:0;background:#070605;z-index:60}
+</style></head><body>
+<div id="glow"></div>
+<div class="beam" id="beamL" style="left:-80px"></div>
+<div class="beam" id="beamR" style="left:1100px"></div>
+<div id="bokeh"></div>
+
+<!-- the award emblem (built from the AFAIC diamond motif) -->
+<svg id="emb" class="abs" width="1920" height="1080" style="left:0;top:0;overflow:visible">
+  <defs>
+    <linearGradient id="gA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF2C4"/><stop offset=".35" stop-color="#E2B95A"/><stop offset=".7" stop-color="#9C7630"/><stop offset="1" stop-color="#E9C46A"/></linearGradient>
+    <linearGradient id="gB" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE9A8"/><stop offset=".5" stop-color="#C69A42"/><stop offset="1" stop-color="#7A5A22"/></linearGradient>
+    <linearGradient id="glint" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <clipPath id="embClip"><g id="clipShapes"></g></clipPath>
+    <radialGradient id="halo"><stop offset="0" stop-color="#FFD98A" stop-opacity=".55"/><stop offset="1" stop-color="#FFD98A" stop-opacity="0"/></radialGradient>
+  </defs>
+  <g id="embG">
+    <circle id="halo" r="330" fill="url(#halo)"/>
+    <g id="pieces"></g>
+    <g clip-path="url(#embClip)"><rect id="glintR" x="-500" y="-260" width="180" height="520" fill="url(#glint)" transform="rotate(20)"/></g>
+    <circle id="core" r="26" fill="#FFF6DC"/>
+  </g>
+</svg>
+
+<!-- A: presents -->
+<div class="center cap" id="presents" style="top:790px">AFAIC presents</div>
+
+<!-- B: title -->
+<div class="scene" id="SB">
+  <div class="center serif gold" id="title" style="top:400px;font-size:178px;font-weight:420;letter-spacing:.06em;line-height:1"></div>
+  <div class="center" style="top:600px;height:2px"><div class="abs" id="ruleL" style="left:560px;top:58px;width:280px;height:1.5px;background:linear-gradient(90deg,rgba(217,181,101,0),#D9B565);transform-origin:100% 50%"></div><div class="abs" id="ruleR" style="left:1080px;top:58px;width:280px;height:1.5px;background:linear-gradient(90deg,#D9B565,rgba(217,181,101,0));transform-origin:0 50%"></div></div>
+  <div class="center serif" id="year" style="top:610px;font-size:96px;font-style:italic;font-weight:300;color:#F6EBD2">2027</div>
+  <div class="center cap" id="sub" style="top:768px;font-size:20px">Afghan Refugee Youth Achievement Awards</div>
+  <div class="center serif" id="tag" style="top:830px;font-size:44px;font-style:italic;font-weight:300;color:#E8D3A0">Recognising potential.</div>
+</div>
+
+<!-- C: are you a high achiever -->
+<div class="scene" id="SC">
+  <div class="center serif" style="top:300px;font-size:92px;font-weight:330;letter-spacing:-.015em"><span class="ln"><span class="in" id="c1">Are you a</span></span></div>
+  <div class="center serif" style="top:410px;font-size:190px;font-weight:330;font-style:italic;letter-spacing:-.025em;line-height:1.05"><span class="ln"><span class="in gold" id="c2">high achiever?</span></span></div>
+  <div class="center" id="c3" style="top:700px;font:500 38px/1 Inter;letter-spacing:.02em;color:#E8D3A0">
+    <span id="w1">Top marks.</span><span id="d1" style="color:#D9B565;padding:0 26px">◆</span><span id="w2">Big wins.</span><span id="d2" style="color:#D9B565;padding:0 26px">◆</span><span id="w3">Real impact.</span>
+  </div>
+</div>
+
+<!-- D: categories -->
+<div class="scene" id="SD">
+  <div class="center cap" id="dh" style="top:150px">Six ways to shine</div>
+  <div id="cards"></div>
+</div>
+
+<!-- E: recognised & rewarded -->
+<div class="scene" id="SE">
+  <div class="abs serif" style="left:150px;top:230px;font-size:104px;font-weight:330;letter-spacing:-.02em;line-height:1.05">
+    <span class="ln"><span class="in" id="e1">Be recognised.</span></span>
+    <span class="ln"><span class="in gold" id="e2" style="font-style:italic">Be rewarded.</span></span>
+  </div>
+  <div class="abs stat" id="st1" style="left:150px;top:560px;width:330px"><div class="n gold num">0</div><div class="l">young achievers honoured<br>every year</div></div>
+  <div class="abs stat" id="st2" style="left:530px;top:560px;width:330px"><div class="n gold num">0</div><div class="l">guests celebrate<br>on the night</div></div>
+  <div id="frame"><div class="ph"><img src="../../assets/cover.jpg"></div>
+    <svg width="800" height="640"><rect id="fr" x="1" y="1" width="798" height="638" fill="none" stroke="#D9B565" stroke-width="2"/></svg></div>
+  <div class="abs cap" id="frcap" style="left:1030px;top:870px;font-size:14px;color:#BFA46A">ARYA Awards night · Campbelltown</div>
+</div>
+
+<!-- F: call to action -->
+<div class="scene" id="SF">
+  <div class="center cap" id="f1" style="top:430px;font-size:24px;letter-spacing:.5em">Nominations open soon</div>
+  <div class="center serif" style="top:490px;font-size:68px;font-weight:330;letter-spacing:-.015em"><span class="ln"><span class="in" id="f2">Nominate yourself or a young <i class="gold">achiever</i> you know.</span></span></div>
+  <div class="center" id="f3" style="top:640px"><div class="pill">afaic.org.au<span>◆</span>0481 188 235<span>◆</span>@afaic1</div></div>
+  <div class="center cap" id="f4" style="top:790px;font-size:16px;color:#BFA46A">ARYA Awards 2027 · Campbelltown NSW · Date to be announced</div>
+  <img id="flogo" src="../../assets/logo_rev.svg" class="abs" style="left:810px;top:880px;width:300px">
+</div>
+
+<div id="vig"></div>
+<div id="fade"></div>
+
+<script src="../engine.js"></script>
+<script>
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const NS = 'http://www.w3.org/2000/svg';
+
+// ---------- emblem: four rotated squares + four small diamonds (AFAIC motif), in gold
+const pieces = $('#pieces'), clip = $('#clipShapes'), PIECES = [];
+const R = 64, big = 118;
+[[0, -1], [1, 0], [0, 1], [-1, 0]].forEach(([dx, dy], i) => {
+  const cx = dx * R, cy = dy * R;
+  const sq = `<rect x="${cx - big / 2}" y="${cy - big / 2}" width="${big}" height="${big}" transform="rotate(45 ${cx} ${cy})"`;
+  const g = document.createElementNS(NS, 'g');
+  g.innerHTML = `${sq} fill="url(#${i % 2 ? 'gB' : 'gA'})" stroke="#FFF0C0" stroke-opacity=".5" stroke-width="1.5"/>
+    <rect x="${cx - 16}" y="${cy - 16}" width="32" height="32" transform="rotate(45 ${cx} ${cy})" fill="#7A5A22" fill-opacity=".55"/>`;
+  pieces.appendChild(g);
+  clip.insertAdjacentHTML('beforeend', `${sq}/>`);
+  PIECES.push({ g, dx, dy, i });
+});
+[[0, -1], [1, 0], [0, 1], [-1, 0]].forEach(([dx, dy], i) => {
+  const cx = dx * 205, cy = dy * 205;
+  const g = document.createElementNS(NS, 'g');
+  g.innerHTML = `<rect x="${cx - 26}" y="${cy - 26}" width="52" height="52" transform="rotate(45 ${cx} ${cy})" fill="url(#gA)"/>`;
+  pieces.appendChild(g);
+  PIECES.push({ g, dx, dy, i: i + 4, small: true });
+});
+
+// ---------- bokeh
+let seed = 5; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const BK = [];
+for (let i = 0; i < 70; i++) {
+  const d = document.createElement('div'); d.className = 'bk'; const s = 6 + Math.pow(rnd(), 2.2) * 60;
+  d.style.width = d.style.height = s + 'px'; $('#bokeh').appendChild(d);
+  BK.push({ d, x: rnd() * 1920, y: rnd() * 1080, sp: 8 + rnd() * 26, ph: rnd() * 6.28, z: s });
+}
+
+// ---------- title letters
+$('#title').textContent = 'ARYA AWARDS';
+
+// ---------- category cards (line icons draw themselves)
+const CATS = [
+  ['Academic Achievement', 'Education', '<path d="M8 30 L40 16 L72 30 L40 44 Z"/><path d="M22 36 V52 Q40 62 58 52 V36"/><path d="M72 30 V48"/>'],
+  ['Sports Excellence', 'Sport', '<path d="M24 12 H56 V30 Q56 46 40 48 Q24 46 24 30 Z"/><path d="M24 18 H12 Q12 32 24 32 M56 18 H68 Q68 32 56 32"/><path d="M40 48 V60 M28 68 H52 M32 60 H48 V68"/>'],
+  ['Community Service', 'Service', '<path d="M40 62 C14 46 10 30 18 22 C26 14 36 18 40 26 C44 18 54 14 62 22 C70 30 66 46 40 62 Z"/>'],
+  ['Leadership', 'Leadership', '<path d="M20 68 V12"/><path d="M20 14 H60 L52 26 L60 38 H20"/><circle cx="20" cy="70" r="3"/>'],
+  ['Cultural Ambassador', 'Culture', '<circle cx="40" cy="40" r="28"/><path d="M12 40 H68 M40 12 C28 26 28 54 40 68 M40 12 C52 26 52 54 40 68"/>'],
+  ['Youth of the Year', 'Overall excellence', '<path d="M40 8 L48.5 30 L72 31 L53.5 45.5 L60 68 L40 55 L20 68 L26.5 45.5 L8 31 L31.5 30 Z"/>'],
+];
+const cw = $('#cards');
+CATS.forEach((c, i) => {
+  const col = i % 3, row = Math.floor(i / 3), x = 185 + col * 535, y = 260 + row * 300;
+  cw.insertAdjacentHTML('beforeend', `<div class="ccard" id="cc${i}" style="left:${x}px;top:${y}px">
+    <svg viewBox="0 0 80 80"><g fill="none" stroke="#E2B95A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${c[2]}</g></svg>
+    <div class="t">${c[0]}</div><div class="s">${c[1]}</div></div>`);
+});
+$$('.ccard svg path, .ccard svg circle').forEach(p => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; p.dataset.len = L; });
+
+// ---------- timeline
+const T = [];
+const fade = (t0, d = 0.9, dy = 18) => ({ o: [[t0, 0], [t0 + d, 1, 'outCubic']], y: [[t0, dy], [t0 + d * 1.2, 0, 'outCubic']] });
+const out = (t1, d = 0.5) => ({ o: [[t1, 1], [t1 + d, 0, 'inOutSine']] });
+const scene = (id, a, b) => T.push([id, { o: [[a, 0], [a + 0.001, 1, 'step'], [b, 1], [b + 0.45, 0, 'inOutSine']], s: [[b, 1], [b + 0.45, 1.04, 'inOutSine']] }]);
+scene('#SB', 4.2, 8.15); scene('#SC', 8.6, 12.8); scene('#SD', 13.2, 19.35); scene('#SE', 19.8, 23.95); scene('#SF', 24.4, 31);
+
+T.push(['#glow', { o: [[0.2, 0], [2.0, 1, 'inOutSine']] }]);
+T.push(['#beamL', { o: [[0.4, 0], [1.6, 1, 'inOutSine']], r: [[0, -32], [30, 10, 'linear']] }]);
+T.push(['#beamR', { o: [[0.7, 0], [1.9, 1, 'inOutSine']], r: [[0, 34], [30, -12, 'linear']] }]);
+T.push(['#presents', M(fade(3.0, 0.9, 10), out(3.95, 0.4))]);
+
+// title letters rise one by one
+T.push(['#title', { o: [[4.4, 0], [5.4, 1, 'outCubic']], y: [[4.4, 30], [5.6, 0, 'outCubic']], fn: (el, t) => {
+  const ls = (0.06 + 0.22 * (1 - E.outQuart(P(t, 4.4, 2.2)))).toFixed(4) + 'em';
+  el.style.letterSpacing = ls; el.style.paddingLeft = ls;   // balance the trailing tracking so the title stays centred
+  el.style.backgroundPosition = `${(100 - 100 * E.inOutSine(P(t, 6.2, 1.6))).toFixed(2)}% 0`; } }]);
+T.push(['#ruleL', { sx: [[5.2, 0], [6.1, 1, 'outCubic']] }]);
+T.push(['#ruleR', { sx: [[5.2, 0], [6.1, 1, 'outCubic']] }]);
+T.push(['#year', fade(5.15, 1.0, 20)]);
+T.push(['#sub', fade(5.7, 0.9, 10)]);
+T.push(['#tag', fade(6.3, 1.0, 12)]);
+
+T.push(['#c1', { y: [[8.8, 110], [9.7, 0, 'outQuint']] }]);
+T.push(['#c2', { y: [[9.15, 110], [10.1, 0, 'outQuint']], fn: (el, t) => { el.style.backgroundPosition = `${(100 - 100 * E.inOutSine(P(t, 10.2, 1.5))).toFixed(2)}% 0`; } }]);
+[['#w1', 10.7], ['#d1', 11.0], ['#w2', 11.1], ['#d2', 11.4], ['#w3', 11.5]].forEach(([id, t]) => { T.push([id, { o: [[t, 0], [t + 0.6, 1, 'outCubic']] }]); $(id).style.display = 'inline-block'; T.push([id, { y: [[t, 14], [t + 0.7, 0, 'outCubic']] }]); });
+
+T.push(['#dh', fade(13.4, 0.8, 10)]);
+CATS.forEach((c, i) => {
+  const t = 13.8 + i * 0.42;
+  T.push(['#cc' + i, M(fade(t, 0.8, 30), { s: [[t, 0.96], [t + 0.9, 1, 'outCubic']] })]);
+  $$(`#cc${i} svg path, #cc${i} svg circle`).forEach(p => T.push([p, { fn: (el, tt) => { el.style.strokeDashoffset = (el.dataset.len * (1 - E.inOutSine(P(tt, t + 0.25, 1.1)))).toFixed(2); } }]));
+});
+
+T.push(['#e1', { y: [[20.1, 110], [21.0, 0, 'outQuint']] }]);
+T.push(['#e2', { y: [[20.5, 110], [21.4, 0, 'outQuint']] }]);
+T.push(['#st1', fade(21.4, 0.8, 14)]); T.push(['#st2', fade(21.7, 0.8, 14)]);
+T.push(['#st1 .n', { fn: (el, t) => { const v = Math.round(40 * E.outExpo(P(t, 21.4, 1.4))); el.textContent = v + (v === 40 ? '+' : ''); } }]);
+T.push(['#st2 .n', { fn: (el, t) => { const v = Math.round(500 * E.outExpo(P(t, 21.7, 1.4))); el.textContent = v + (v === 500 ? '+' : ''); } }]);
+T.push(['#frame', M(fade(20.0, 1.0, 0), { s: [[20.0, 0.97], [21.4, 1, 'outCubic']] })]);
+T.push(['#frame img', { s: [[20.0, 1.14], [24.4, 1.02, 'linear']] }]);
+T.push(['#fr', { fn: (el, t) => { const L = 2 * (798 + 638); el.style.strokeDasharray = L; el.style.strokeDashoffset = (L * (1 - E.inOutSine(P(t, 20.3, 1.6)))).toFixed(1); } }]);
+T.push(['#frcap', fade(21.6, 0.8, 8)]);
+
+T.push(['#f1', fade(24.9, 0.9, 10)]);
+T.push(['#f2', { y: [[25.3, 110], [26.2, 0, 'outQuint']] }]);
+T.push(['#f3', M(fade(26.1, 0.9, 16), { s: [[26.1, 0.96], [27.0, 1, 'outCubic']] })]);
+T.push(['#f4', fade(26.7, 0.9, 8)]);
+T.push(['#flogo', fade(27.1, 1.0, 10)]);
+T.push(['#fade', { o: [[0, 1], [1.0, 0, 'inOutSine'], [29.2, 0], [30.0, 1, 'inOutSine']] }]);
+
+// emblem: assemble (0.8-2.6), glint, move up for the title, hide, return smaller for the CTA
+const embPos = t => {
+  if (t < 4.0) return [960, 470, 1];
+  if (t < 4.7) { const p = E.inOutQuart(P(t, 4.0, 0.7)); return [960, 470 - 250 * p, 1 - 0.45 * p]; }
+  if (t < 24.4) return [960, 220, 0.55];
+  return [960, 250, 0.5];
+};
+const embVis = t => t < 8.15 ? 1 : t < 8.6 ? 1 - E.inOutSine(P(t, 8.15, 0.45)) : t < 24.6 ? 0 : E.inOutSine(P(t, 24.6, 0.9));
+
+setup(T, 30, t => {
+  const [ex, ey, es] = embPos(t), spin = 6 * Math.sin(t * 0.35);
+  $('#embG').setAttribute('transform', `translate(${ex} ${ey}) scale(${es.toFixed(4)}) rotate(${spin.toFixed(3)})`);
+  $('#emb').style.opacity = embVis(t).toFixed(4);
+  for (const p of PIECES) {
+    const st = 0.8 + (p.small ? 0.9 : 0) + p.i % 4 * 0.12, q = E.outQuart(P(t, st, 1.4));
+    const dist = (p.small ? 420 : 520) * (1 - q), rot = (p.i % 2 ? 1 : -1) * 90 * (1 - q);
+    p.g.setAttribute('transform', `translate(${(p.dx * dist + p.dy * dist * 0.4).toFixed(2)} ${(p.dy * dist - p.dx * dist * 0.4).toFixed(2)}) rotate(${rot.toFixed(2)})`);
+    p.g.style.opacity = E.outCubic(P(t, st, 0.5)).toFixed(3);
+  }
+  const core = E.outBackSoft(P(t, 2.55, 0.5));
+  $('#core').setAttribute('r', (26 * core).toFixed(2));
+  $('#halo').style.opacity = (E.inOutSine(P(t, 2.4, 1.2)) * (0.8 + 0.2 * Math.sin(t * 2))).toFixed(3);
+  // glints: once on assembly, again on the call to action
+  const gx = t < 27.6 ? -500 + 1000 * E.inOutSine(P(t, 2.85, 0.9)) : -500 + 1000 * E.inOutSine(P(t, 27.6, 0.9));
+  $('#glintR').setAttribute('x', gx.toFixed(1));
+  for (const b of BK) {
+    const y = ((b.y - t * b.sp) % 1180 + 1180) % 1180 - 50, x = b.x + Math.sin(t * 0.4 + b.ph) * 30;
+    b.d.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0)`;
+    b.d.style.opacity = ((0.25 + 0.55 * (0.5 + 0.5 * Math.sin(t * 1.3 + b.ph * 3))) * P(t, 0.5, 2.0) * (b.z > 40 ? 0.45 : 1)).toFixed(3);
+  }
+});
+</script>
+</body></html>
