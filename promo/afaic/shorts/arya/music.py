@@ -1,5 +1,5 @@
 """Soundtrack for the ARYA Awards 2027 ad (v2): driving 120 BPM orchestral-pop in D major.
-Every impact, whoosh and bell is placed on the picture: emblem pieces, zoom-through, title slam,
+Every impact, whoosh and bell is placed on the picture: logo build (trace, lock, bloom, orbit, ignite), zoom-through, title slam,
 whip pans, the word slams, each carousel turn, the photo cuts and the final fanfare."""
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -55,10 +55,17 @@ dr = drone([26, 33, 38], 4.6, 0.06); dry.add(dr, 0); wet.add(dr, 0, 0.5)
 gliss(0.4, True, 0.14)
 for k in range(8):   # quiet ticking anticipation
     s = pluck_saw(74 if k % 2 == 0 else 81, 0.06, 3000, 0.05); dry.add(s, k * 0.25, 0.25 + 0.03 * k, pan=0.3 if k % 2 else -0.3)
-for k, (t, m) in enumerate([(2.0, 74), (2.25, 78), (2.5, 81), (2.75, 86)]):   # emblem pieces
-    dry.add(timpani(38 + (k % 2) * 7, 0.55), t); chime(m + 12, t, 0.4); dry.add(whoosh(0.3, 0.22, 0.07), t - 0.22)
-for k in range(4): chime(93 + 2 * k, 3.0 + k * 0.06, 0.25)
-chime(98, 3.0, 0.5); gliss(3.15, True, 0.16)
+# logo build (see logo-anim.js): trace -> lock -> bloom -> orbit -> ignite -> glint
+for k, m in enumerate([74, 78, 81, 86, 88, 90]): chime(m + 12, 0.3 + k * 0.2, 0.16, pan=-0.5 + 0.2 * k)        # lines trace
+air = riser(1.3, 600, 5000, 0.05); dry.add(air, 0.2)
+dry.add(timpani(38, 0.7), 1.75); dry.add(boom(1.0), 1.75, 0.45); brass('D', 1.75, 0.5, 0.55, 1800); chime(86, 1.75, 0.35)   # petals lock
+for k, m in enumerate([86, 88, 90, 93, 95, 98, 100, 102, 98, 100, 102, 105]): chime(m, 1.85 + k * 0.055, 0.11, pan=-0.7 + 0.12 * k)   # rosette bloom
+dry.add(whoosh(0.6, 0.55, 0.12), 2.3)                                                                        # tips orbit
+for k in range(5): dry.add(timpani(38, 0.15 + 0.07 * k), 2.3 + k * 0.11)
+kik(2.85, 0.9); dry.add(timpani(45, 0.85), 2.85); dry.add(boom(1.4), 2.85, 0.6); dry.add(sub808(38, 1.2), 2.85, 0.5)   # ignite
+for m in (86, 90, 93, 98): chime(m, 2.85, 0.3)
+dry.add(crash(2.0), 2.85, 0.3); wet.add(crash(2.0), 2.85, 0.3)
+gliss(3.15, True, 0.16)                                                                                      # glint
 for k in range(8): dry.add(snare(), 3.0 + k * 0.125, 0.1 + 0.05 * k)
 dry.add(riser(1.0, 300, 9000, 0.12), 3.0); dry.add(whoosh(0.4, 0.33, 0.12), 3.6)
 
@@ -130,6 +137,9 @@ dry.add(riser(1.0, 400, 10000, 0.14), 23.0)
 impact(24.0, 'D')
 for k in range(18): chime(int(86 + rng.integers(0, 16)), 24.0 + rng.random() * 1.5, 0.12, pan=rng.uniform(-0.9, 0.9))
 groove(24.0, 28.0)
+for k, m in enumerate([90, 93, 95, 98, 100, 102]): chime(m, 24.3 + k * 0.035, 0.1, pan=-0.5 + 0.2 * k)   # quick logo rebuild
+for m in (86, 90, 93): chime(m, 24.8, 0.25)
+dry.add(timpani(45, 0.5), 24.8)
 FAN = [(24.5, 69, .25), (24.75, 74, .25), (25.0, 78, .7), (25.75, 76, .25), (26.0, 74, .45), (26.5, 71, .45), (27.0, 69, .25), (27.25, 74, .25), (27.5, 78, .25), (27.75, 81, .25)]
 for t, m, d in FAN: lead(m, t, d, 1.0)
 gliss(27.6, True, 0.16)

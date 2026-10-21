@@ -62,16 +62,10 @@ body{font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased;color:#F6EB
 <div id="cam" class="full">
   <!-- emblem (shared by intro, title and call to action) -->
   <svg id="emb" class="abs" width="1920" height="1080" style="left:0;top:0;overflow:visible">
-    <defs>
-      <linearGradient id="gA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF2C4"/><stop offset=".35" stop-color="#E2B95A"/><stop offset=".7" stop-color="#9C7630"/><stop offset="1" stop-color="#E9C46A"/></linearGradient>
-      <linearGradient id="gB" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE9A8"/><stop offset=".5" stop-color="#C69A42"/><stop offset="1" stop-color="#7A5A22"/></linearGradient>
-      <linearGradient id="glint" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
-      <clipPath id="embClip"><g id="clipShapes"></g></clipPath>
-      <radialGradient id="halo"><stop offset="0" stop-color="#FFD98A" stop-opacity=".6"/><stop offset="1" stop-color="#FFD98A" stop-opacity="0"/></radialGradient>
-    </defs>
-    <g id="embG"><circle id="haloC" r="340" fill="url(#halo)"/><g id="pieces"></g>
-      <g clip-path="url(#embClip)"><rect id="glintR" x="-520" y="-280" width="190" height="560" fill="url(#glint)" transform="rotate(20)"/></g>
-      <circle id="core" r="26" fill="#FFF6DC"/></g>
+    <defs id="embDefs"><radialGradient id="halo"><stop offset="0" stop-color="#FFD98A" stop-opacity=".6"/><stop offset="1" stop-color="#FFD98A" stop-opacity="0"/></radialGradient></defs>
+    <g id="embG"><circle id="haloC" r="340" fill="url(#halo)"/>
+      <!-- the real AFAIC icon, in logo units (4.6 px per unit), centred on its white core -->
+      <g id="logoG" transform="scale(4.6) translate(-54.632 -62.342)"></g></g>
   </svg>
 
   <!-- S0 intro -->
@@ -139,27 +133,16 @@ body{font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased;color:#F6EB
 <div class="full" id="fade"></div>
 
 <script src="../engine.js"></script>
+<script src="../logo-geom.js"></script>
+<script src="../logo-anim.js"></script>
 <script>
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const NS = 'http://www.w3.org/2000/svg';
 let seed = 9; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
 const BEAT = 0.5;
 
-// ---------- emblem (AFAIC diamond motif in gold)
-const PIECES = [];
-[[0, -1], [1, 0], [0, 1], [-1, 0]].forEach(([dx, dy], i) => {
-  const cx = dx * 64, cy = dy * 64, big = 118;
-  const sq = `<rect x="${cx - big / 2}" y="${cy - big / 2}" width="${big}" height="${big}" transform="rotate(45 ${cx} ${cy})"`;
-  const g = document.createElementNS(NS, 'g');
-  g.innerHTML = `${sq} fill="url(#${i % 2 ? 'gB' : 'gA'})" stroke="#FFF0C0" stroke-opacity=".5" stroke-width="1.5"/><rect x="${cx - 16}" y="${cy - 16}" width="32" height="32" transform="rotate(45 ${cx} ${cy})" fill="#7A5A22" fill-opacity=".55"/>`;
-  $('#pieces').appendChild(g); $('#clipShapes').insertAdjacentHTML('beforeend', `${sq}/>`);
-  PIECES.push({ g, dx, dy, t0: 2.0 + i * 0.25 });
-});
-[[0, -1], [1, 0], [0, 1], [-1, 0]].forEach(([dx, dy], i) => {
-  const cx = dx * 205, cy = dy * 205, g = document.createElementNS(NS, 'g');
-  g.innerHTML = `<rect x="${cx - 26}" y="${cy - 26}" width="52" height="52" transform="rotate(45 ${cx} ${cy})" fill="url(#gA)"/>`;
-  $('#pieces').appendChild(g); PIECES.push({ g, dx, dy, t0: 3.0 + i * 0.06, small: true });
-});
+// ---------- the AFAIC icon, animated from its exact geometry, in gold foil
+const ICON = createLogoIcon($('#logoG'), $('#embDefs'), ICON_GOLD, 'arya');
 
 // ---------- atmosphere
 const BEAMS = [];
@@ -265,7 +248,7 @@ T.push(['#flash', { o: [[3.92, 0], [4.0, 0.85, 'linear'], [4.45, 0, 'outCubic'],
 T.push(['#fade', { o: [[0, 1], [0.7, 0, 'inOutSine'], [29.3, 0], [30.0, 1, 'inOutSine']] }]);
 
 // flare events: [time, y, from x, to x, duration, strength]
-const FLARES = [[0.35, 300, -300, 2200, 1.6, 0.7], [3.0, 480, 700, 1250, 0.7, 0.9], [4.0, 430, 960, 960, 0.9, 1.2], [12.0, 540, 1600, 300, 0.8, 0.8], [24.0, 300, 960, 960, 0.9, 1.2], [27.6, 250, 600, 1350, 0.9, 0.8]];
+const FLARES = [[0.35, 300, -300, 2200, 1.6, 0.7], [2.85, 480, 960, 960, 0.8, 1.0], [4.0, 430, 960, 960, 0.9, 1.2], [12.0, 540, 1600, 300, 0.8, 0.8], [24.0, 300, 960, 960, 0.9, 1.2], [27.6, 250, 600, 1350, 0.9, 0.8]];
 
 // emblem placement per section
 function emb(t) {
@@ -284,19 +267,13 @@ setup(T, 30, t => {
   const cs = 1 + 0.035 * E.inOutSine(P(t, sceneStart, 4.5)) + kick;
   $('#cam').style.transform = `translate3d(${(Math.sin(t * 0.37) * 10).toFixed(2)}px,${(Math.cos(t * 0.29) * 6).toFixed(2)}px,0) scale(${cs.toFixed(4)})`;
 
-  // emblem
+  // emblem: full build in the intro, finished logo on the title, a fast rebuild on the call to action
   const [ex, ey, es, eo] = emb(t);
-  $('#embG').setAttribute('transform', `translate(${ex} ${ey}) scale(${es.toFixed(4)}) rotate(${(5 * Math.sin(t * 0.5)).toFixed(3)})`);
+  $('#embG').setAttribute('transform', `translate(${ex} ${ey}) scale(${es.toFixed(4)})`);
   $('#emb').style.opacity = eo.toFixed(4);
-  for (const p of PIECES) {
-    const q = E.outQuart(P(t, p.t0, p.small ? 0.5 : 0.7)), dist = (p.small ? 380 : 620) * (1 - q), rot = (p.dx + p.dy > 0 ? 1 : -1) * 120 * (1 - q);
-    p.g.setAttribute('transform', `translate(${(p.dx * dist + p.dy * dist * .5).toFixed(2)} ${(p.dy * dist - p.dx * dist * .5).toFixed(2)}) rotate(${rot.toFixed(2)})`);
-    p.g.style.opacity = E.outCubic(P(t, p.t0, 0.25)).toFixed(3);
-  }
-  $('#core').setAttribute('r', (26 * E.outBackSoft(P(t, 3.0, 0.4))).toFixed(2));
-  $('#haloC').style.opacity = (E.inOutSine(P(t, 2.8, 0.8)) * (0.8 + 0.2 * Math.sin(t * 4))).toFixed(3);
-  const g1 = P(t, 3.15, 0.55), g2 = P(t, 27.6, 0.8);
-  $('#glintR').setAttribute('x', (t < 27 ? -520 + 1040 * E.inOutSine(g1) : -520 + 1040 * E.inOutSine(g2)).toFixed(1));
+  const bs = t < 4.0 ? t : (t >= 24.0 ? 1.25 + (t - 24.0) * 2.0 : 10);
+  ICON.update(bs, t < 8 ? P(t, 3.15, 0.6) : P(t, 27.6, 0.8));
+  $('#haloC').style.opacity = (E.inOutSine(P(bs, 2.75, 0.8)) * (0.8 + 0.2 * Math.sin(t * 4))).toFixed(3);
 
   // carousel: one card per beat, then a celebratory spin
   let ang = 0;
